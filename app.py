@@ -14,7 +14,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import time
 
 # ==========================================
-# IMPOR SKIMAGE (jika ada)
+# IMPOR SKIMAGE (jika ada) untuk SSIM & PSNR
 # ==========================================
 try:
     from skimage.metrics import structural_similarity as ssim
@@ -33,7 +33,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS - PAKSA PINK TOTAL
+# 2. CSS - TEMA PINK SOFT + NAVIGASI EMOJI
 # ==========================================
 st.markdown("""
     <style>
@@ -147,7 +147,7 @@ st.markdown("""
             margin-bottom: 8px !important;
         }
 
-        /* CARD HASIL */
+        /* CARD HASIL (Pakai div biasa) */
         .result-card {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             padding: 20px !important;
@@ -168,7 +168,6 @@ st.markdown("""
             color: #6A1B4D !important;
         }
 
-        /* EXPLANATION BOX */
         .explanation-box {
             background: rgba(255, 255, 255, 0.5) !important;
             padding: 15px !important;
@@ -507,31 +506,28 @@ def halaman_deteksi():
                 col_r1, col_r2, col_r3 = st.columns([2, 2, 1.5])
 
                 with col_r1:
-                    st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                    st.markdown('<span class="pink-badge">📸 Foto Pertama</span>', unsafe_allow_html=True)
-                    st.image(img1_warna, caption=f"Resize {UKURAN[0]}x{UKURAN[1]}", use_container_width=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    with st.container():
+                        st.markdown('<p style="text-align:center; background:#FCE4EC; padding:8px; border-radius:12px; border:1px solid #EC407A; font-weight:bold; color:#AD1457;">📸 Foto Pertama</p>', unsafe_allow_html=True)
+                        st.image(img1_warna, caption=f"Resize {UKURAN[0]}x{UKURAN[1]}", use_container_width=True)
 
                 with col_r2:
-                    st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                    st.markdown('<span class="pink-badge">📸 Foto Kedua</span>', unsafe_allow_html=True)
-                    st.image(img2_warna, caption=f"Resize {UKURAN[0]}x{UKURAN[1]}", use_container_width=True)
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    with st.container():
+                        st.markdown('<p style="text-align:center; background:#FCE4EC; padding:8px; border-radius:12px; border:1px solid #EC407A; font-weight:bold; color:#AD1457;">📸 Foto Kedua</p>', unsafe_allow_html=True)
+                        st.image(img2_warna, caption=f"Resize {UKURAN[0]}x{UKURAN[1]}", use_container_width=True)
 
                 with col_r3:
-                    st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                    st.markdown('<span class="pink-badge">🎯 Skor Kemiripan</span>', unsafe_allow_html=True)
-                    st.markdown(f"<h1 style='color:#AD1457;font-size:42px;'>{kemiripan:.2%}</h1>", unsafe_allow_html=True)
-                    if kemiripan >= ambang:
-                        st.success("✅ **MIRIP**")
-                        st.balloons()
-                    elif kemiripan >= 0.50:
-                        st.warning("⚠️ **CUKUP MIRIP**")
-                    else:
-                        st.error("❌ **TIDAK MIRIP**")
-                    st.caption(f"Komponen PCA: {k}")
-                    st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
-                    st.markdown('</div>', unsafe_allow_html=True)
+                    with st.container():
+                        st.markdown('<p style="text-align:center; background:#FCE4EC; padding:8px; border-radius:12px; border:1px solid #EC407A; font-weight:bold; color:#AD1457;">🎯 Skor Kemiripan</p>', unsafe_allow_html=True)
+                        st.markdown(f"<h1 style='text-align:center; color:#AD1457; font-size:42px;'>{kemiripan:.2%}</h1>", unsafe_allow_html=True)
+                        if kemiripan >= ambang:
+                            st.success("✅ **MIRIP**")
+                            st.balloons()
+                        elif kemiripan >= 0.50:
+                            st.warning("⚠️ **CUKUP MIRIP**")
+                        else:
+                            st.error("❌ **TIDAK MIRIP**")
+                        st.caption(f"Komponen PCA: {k}")
+                        st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
 
                 # --- GRAFIK ---
                 st.subheader("📈 Grafik Akumulasi Informasi")
