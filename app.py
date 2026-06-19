@@ -1,4 +1,4 @@
-# app.py - VERSI FINAL (BADGE PINK UNTUK LABEL)
+# app.py - VERSI FINAL (BADGE PINK FULL WIDTH)
 # =====================================================
 
 import streamlit as st
@@ -150,18 +150,21 @@ st.markdown("""
         .stWarning p {
             color: #AD1457 !important;
         }
-        /* ===== BADGE PINK UNTUK LABEL ===== */
+        
+        /* ===== BADGE PINK FULL WIDTH ===== */
         .pink-badge {
-            display: inline-block;
+            display: block !important;
+            width: 100% !important;
             background: linear-gradient(135deg, #FCE4EC, #F8BBD0) !important;
             color: #AD1457 !important;
-            padding: 6px 18px !important;
-            border-radius: 20px !important;
+            padding: 10px 18px !important;
+            border-radius: 12px !important;
             font-weight: bold !important;
             font-size: 16px !important;
             border: 1px solid #EC407A !important;
-            box-shadow: 0 2px 8px rgba(233, 30, 99, 0.15) !important;
-            margin-bottom: 10px !important;
+            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.12) !important;
+            text-align: center !important;
+            margin-bottom: 12px !important;
         }
         .result-container {
             text-align: center !important;
@@ -322,7 +325,7 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             progress_bar.empty()
             
             # ==========================================
-            # 9. TAMPILKAN HASIL (BADGE PINK)
+            # 9. TAMPILKAN HASIL (BADGE PINK FULL WIDTH)
             # ==========================================
             st.markdown("---")
             st.subheader("📊 Hasil Deteksi")
@@ -331,19 +334,19 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             
             with col_r1:
                 st.markdown('<div class="result-container">', unsafe_allow_html=True)
-                st.markdown('<span class="pink-badge">📸 Foto Pertama</span>', unsafe_allow_html=True)
+                st.markdown('<div class="pink-badge">📸 Foto Pertama</div>', unsafe_allow_html=True)
                 st.image(img1_color, caption=f"Resize {IMG_SIZE[0]}x{IMG_SIZE[1]}", use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             
             with col_r2:
                 st.markdown('<div class="result-container">', unsafe_allow_html=True)
-                st.markdown('<span class="pink-badge">📸 Foto Kedua</span>', unsafe_allow_html=True)
+                st.markdown('<div class="pink-badge">📸 Foto Kedua</div>', unsafe_allow_html=True)
                 st.image(img2_color, caption=f"Resize {IMG_SIZE[0]}x{IMG_SIZE[1]}", use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
             
             with col_r3:
                 st.markdown('<div class="result-container">', unsafe_allow_html=True)
-                st.markdown('<span class="pink-badge">🎯 Skor Kemiripan</span>', unsafe_allow_html=True)
+                st.markdown('<div class="pink-badge">🎯 Skor Kemiripan</div>', unsafe_allow_html=True)
                 st.markdown(f"<h1 style='color:#AD1457;font-size:42px;'>{similarity:.2%}</h1>", unsafe_allow_html=True)
                 
                 if similarity >= threshold:
