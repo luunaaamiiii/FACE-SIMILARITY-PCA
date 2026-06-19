@@ -33,7 +33,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS - TEMA PINK + NAVIGASI EMOJI (TANPA TITIK)
+# 2. CSS - TEMA PINK + TOMBOL LINGKARAN
 # ==========================================
 st.markdown("""
     <style>
@@ -181,56 +181,39 @@ st.markdown("""
         }
 
         /* =========================================================
-           ===== NAVIGASI EMOJI (TANPA TITIK, AKTIF LEBIH BESAR) =====
+           ===== NAVIGASI TOMBOL LINGKARAN =====
            ========================================================= */
-        .stRadio [role="radiogroup"] {
+        .nav-container {
             display: flex !important;
             justify-content: center !important;
-            gap: 20px !important;
-            background: transparent !important;
-            border: none !important;
+            gap: 12px !important;
             padding: 10px 0 !important;
         }
-        .stRadio [role="radiogroup"] label {
+        .nav-btn {
+            width: 55px !important;
+            height: 55px !important;
+            border-radius: 50% !important;
+            border: 2px solid #EC407A !important;
             background: transparent !important;
-            border: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            font-size: 32px !important;
-            transition: all 0.3s ease !important;
-            cursor: pointer !important;
-            display: inline-flex !important;
+            font-size: 26px !important;
+            display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            min-width: 40px !important;
-            min-height: 40px !important;
-            text-align: center !important;
-            line-height: 1 !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            padding: 0 !important;
+            color: #6A1B4D !important;
+            box-shadow: none !important;
         }
-        /* === HILANGKAN BULLET RADIO === */
-        .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj,
-        .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0,
-        .stRadio [role="radiogroup"] label span:first-child,
-        .stRadio [role="radiogroup"] label svg,
-        .stRadio [role="radiogroup"] label input {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            opacity: 0 !important;
-            position: absolute !important;
-            pointer-events: none !important;
+        .nav-btn:hover {
+            transform: scale(1.08) !important;
+            background: rgba(236, 64, 122, 0.15) !important;
         }
-        /* HOVER EFEK */
-        .stRadio [role="radiogroup"] label:hover {
-            transform: scale(1.15) rotate(3deg) !important;
-            background: transparent !important;
-        }
-        /* AKTIF: LEBIH BESAR */
-        .stRadio [role="radiogroup"] label[data-checked="true"] {
-            font-size: 44px !important;
-            transform: scale(1) !important;
-            background: transparent !important;
-            text-shadow: 0 0 15px rgba(236, 64, 122, 0.25) !important;
+        .nav-btn.active {
+            background: rgba(236, 64, 122, 0.25) !important;
+            border-color: #D81B60 !important;
+            box-shadow: 0 0 20px rgba(236, 64, 122, 0.2) !important;
+            transform: scale(1.05) !important;
         }
         .sidebar-caption {
             text-align: center;
@@ -629,24 +612,40 @@ def halaman_deteksi():
                     """, unsafe_allow_html=True)
 
 # ==========================================
-# 5. NAVIGASI SIDEBAR (EMOJI SAJA, TANPA TITIK)
+# 5. NAVIGASI SIDEBAR (TOMBOL LINGKARAN)
 # ==========================================
 st.sidebar.markdown("🌸 **Haloo!!**")
-menu = st.sidebar.radio(
-    "",
-    ["🏠", "🌫️", "🗜️", "🔍"],
-    index=0,
-    horizontal=True,
-    key="menu_radio"
-)
 
-page_map = {
-    "🏠": "🏠 Home",
-    "🌫️": "🌫️ Grayscale",
-    "🗜️": "🗜️ Kompresi",
-    "🔍": "🔍 Deteksi Kemiripan"
-}
-st.session_state.page = page_map[menu]
+# Daftar menu
+menus = [
+    ("🏠", "🏠 Home"),
+    ("🌫️", "🌫️ Grayscale"),
+    ("🗜️", "🗜️ Kompresi"),
+    ("🔍", "🔍 Deteksi Kemiripan")
+]
+
+# Buat 4 kolom untuk tombol
+cols = st.sidebar.columns(4)
+
+for col, (emoji, page_name) in zip(cols, menus):
+    with col:
+        is_active = (st.session_state.page == page_name)
+        # Tombol dengan CSS class dinamis
+        if st.button(emoji, key=f"nav_{emoji}", use_container_width=True):
+            st.session_state.page = page_name
+            st.rerun()
+        # Tandai tombol aktif dengan CSS
+        if is_active:
+            st.markdown(f"""
+                <style>
+                    div[data-testid="stVerticalBlock"] button[data-testid="baseButton-secondary"]:has(> div:contains("{emoji}")) {{
+                        background: rgba(236, 64, 122, 0.25) !important;
+                        border-color: #D81B60 !important;
+                        box-shadow: 0 0 20px rgba(236, 64, 122, 0.2) !important;
+                        transform: scale(1.05) !important;
+                    }}
+                </style>
+            """, unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
 if st.session_state.page == "🏠 Home":
