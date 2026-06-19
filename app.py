@@ -459,3 +459,27 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
                 Dari 10.000 pixel wajah, PCA bisa meringkasnya jadi 50 angka saja tanpa kehilangan banyak informasi. Semakin tinggi garis biru, semakin baik representasi wajahnya.
                 </div>
                 """, unsafe_allow_html=True)
+# ==========================================
+# GANTI IKON PANAH HEADER DENGAN SAKURA
+# ==========================================
+import streamlit.components.v1 as components
+
+components.html("""
+    <script>
+        // Tunggu sampai halaman selesai dimuat
+        setTimeout(function() {
+            // Cari tombol toggle sidebar (ikon panah di header)
+            const toggleBtn = document.querySelector('button[data-testid="baseButton-header"]');
+            if (toggleBtn) {
+                // Ganti konten tombol dengan ikon sakura
+                toggleBtn.innerHTML = '🌸';
+                // Tambahkan styling agar ukuran pas
+                toggleBtn.style.fontSize = '24px';
+                toggleBtn.style.lineHeight = '1';
+                toggleBtn.style.background = 'transparent';
+                toggleBtn.style.border = 'none';
+                toggleBtn.style.cursor = 'pointer';
+            }
+        }, 500); // delay biar komponen selesai render
+    </script>
+""", height=0, scrolling=False)
