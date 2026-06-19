@@ -24,7 +24,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS - TEMA PINK SOFT + SEMBUNYIKAN PANAH
+# 2. CSS - TEMA PINK SOFT
 # ==========================================
 st.markdown("""
     <style>
@@ -60,17 +60,6 @@ st.markdown("""
         header button:hover {
             transform: scale(1.05) !important;
             transition: 0.3s !important;
-        }
-        
-        /* ===== SEMBUNYIKAN PANAH DEFAULT ===== */
-        header button[data-testid="baseButton-header"] {
-            display: none !important;
-        }
-        header button[data-testid="stSidebarCollapse"] {
-            display: none !important;
-        }
-        header button:first-child {
-            display: none !important;
         }
         
         /* ===== SIDEBAR ===== */
@@ -155,7 +144,6 @@ st.markdown("""
         /* =========================================================
            ===== TOMBOL =====
            ========================================================= */
-        /* Tombol sakura di sidebar */
         .sakura-btn-container .stButton button {
             background: transparent !important;
             border: 2px solid #EC407A !important;
@@ -177,7 +165,6 @@ st.markdown("""
             box-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
         
-        /* Tombol "Proses Deteksi Sekarang" */
         .stButton button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
             color: white !important;
@@ -191,29 +178,6 @@ st.markdown("""
         .stButton button:hover {
             transform: scale(1.03) translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
-        }
-        
-        /* Tombol sakura di header (custom) */
-        .header-sakura-btn {
-            background: transparent !important;
-            border: 2px solid #F8BBD0 !important;
-            border-radius: 50% !important;
-            font-size: 28px !important;
-            padding: 8px 12px !important;
-            color: #FFFFFF !important;
-            cursor: pointer !important;
-            transition: 0.3s !important;
-            width: 50px !important;
-            height: 50px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin: 0 auto !important;
-        }
-        .header-sakura-btn:hover {
-            transform: scale(1.15) rotate(15deg) !important;
-            background: rgba(248, 187, 208, 0.2) !important;
-            box-shadow: 0 0 25px rgba(248, 187, 208, 0.3) !important;
         }
         
         /* =========================================================
@@ -304,19 +268,13 @@ if "show_upload" not in st.session_state:
 # ==========================================
 
 def deteksi_dan_potong_wajah(byte_gambar):
-    """
-    Deteksi wajah menggunakan Haar Cascade, lalu potong (crop) area wajah.
-    Kalau gagal deteksi, pakai gambar asli.
-    """
     arr_np = np.frombuffer(byte_gambar, np.uint8)
     img = cv2.imdecode(arr_np, cv2.IMREAD_COLOR)
     abu = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
     cascade_wajah = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
     wajah = cascade_wajah.detectMultiScale(abu, scaleFactor=1.1, minNeighbors=5, minSize=(50, 50))
-    
     if len(wajah) > 0:
         x, y, w, h = max(wajah, key=lambda rect: rect[2] * rect[3])
         potongan = abu[y:y+h, x:x+w]
@@ -325,13 +283,6 @@ def deteksi_dan_potong_wajah(byte_gambar):
         return abu, False
 
 def praproses_dengan_deteksi_wajah(byte_gambar, ukuran=(100, 100)):
-    """
-    Preprocessing lengkap:
-    1. Deteksi & crop wajah
-    2. Grayscale (sudah dari crop)
-    3. Resize ke ukuran target
-    4. Flatten & normalisasi (0-1)
-    """
     potongan, terdeteksi = deteksi_dan_potong_wajah(byte_gambar)
     resize = cv2.resize(potongan, ukuran)
     normal = resize / 255.0
@@ -339,18 +290,13 @@ def praproses_dengan_deteksi_wajah(byte_gambar, ukuran=(100, 100)):
     return vektor, resize, terdeteksi
 
 def muat_gambar_berwarna(byte_gambar, ukuran=(100, 100)):
-    """
-    Muat gambar berwarna untuk ditampilkan di hasil.
-    """
     arr_np = np.frombuffer(byte_gambar, np.uint8)
     img = cv2.imdecode(arr_np, cv2.IMREAD_COLOR)
     abu = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
     cascade_wajah = cv2.CascadeClassifier(
         cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
     )
     wajah = cascade_wajah.detectMultiScale(abu, scaleFactor=1.1, minNeighbors=5, minSize=(50, 50))
-    
     if len(wajah) > 0:
         x, y, w, h = max(wajah, key=lambda rect: rect[2] * rect[3])
         potongan = img[y:y+h, x:x+w]
@@ -361,22 +307,13 @@ def muat_gambar_berwarna(byte_gambar, ukuran=(100, 100)):
         return cv2.cvtColor(resize, cv2.COLOR_BGR2RGB)
 
 # ==========================================
-# 5. JUDUL + TOMBOL SAKURA DI HEADER
+# 5. JUDUL (DI TENGAH)
 # ==========================================
-kolom_judul, kolom_sakura = st.columns([6, 1])
-with kolom_judul:
-    st.markdown('<h1 class="main-title">🌸 Deteksi Kemiripan Wajah</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title">Menggunakan PCA (Eigenfaces) & Cosine Similarity</p>', unsafe_allow_html=True)
-with kolom_sakura:
-    st.markdown('<div style="display:flex;align-items:center;justify-content:center;height:100%;padding-top:15px;">', unsafe_allow_html=True)
-    # Tombol sakura custom di header
-    if st.button("🌸", key="toggle_header_sakura"):
-        st.session_state.show_upload = not st.session_state.show_upload
-        st.rerun()
-    st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">🌸 Deteksi Kemiripan Wajah</h1>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">Menggunakan PCA (Eigenfaces) & Cosine Similarity</p>', unsafe_allow_html=True)
 
 # ==========================================
-# 6. SIDEBAR (Upload Data Latih + Slider + Anggota)
+# 6. SIDEBAR
 # ==========================================
 with st.sidebar:
     st.markdown("---")
@@ -390,7 +327,6 @@ with st.sidebar:
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown("---")
     
-    # === UPLOAD DATA LATIH ===
     if st.session_state.show_upload:
         st.header("📂 Upload Data Latih")
         st.markdown("Upload **minimal 10 foto** wajah (2 orang, masing-masing 5+ foto)")
@@ -411,13 +347,11 @@ with st.sidebar:
     
     st.divider()
     
-    # === SLIDER THRESHOLD ===
     ambang = st.slider("🎯 Ambang Batas Kemiripan", 0.0, 1.0, 0.70, 0.05)
     st.caption(f"Threshold: {ambang:.2f}")
     
     st.divider()
     
-    # === DAFTAR ANGGOTA ===
     st.markdown("""
         <b>🌸 Kelompok 2</b><br>
         1. Gea Destadia Al-Zahra<br>
@@ -445,10 +379,9 @@ with kolom2:
 # 8. TOMBOL PROSES & LOGIKA DETEKSI
 # ==========================================
 if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
-    # === VALIDASI ===
     if 'file_latih' not in locals() or not file_latih or len(file_latih) < 10:
         st.error("⚠️ **Data Latih Kurang!** Upload minimal 10 foto.")
-        st.info("💡 Klik tombol 🌸 di sidebar atau di pojok kanan atas untuk menampilkan bagian upload.")
+        st.info("💡 Klik tombol 🌸 di sidebar untuk menampilkan bagian upload.")
     elif not file1 or not file2:
         st.error("⚠️ Upload kedua foto uji!")
     else:
@@ -458,7 +391,6 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             UKURAN = (100, 100)
             X_latih = []
             
-            # --- A. Preprocessing Data Latih ---
             progress = st.progress(0, text="Mengolah data latih...")
             for i, file in enumerate(file_latih):
                 vektor, _, _ = praproses_dengan_deteksi_wajah(file.getvalue(), UKURAN)
@@ -467,27 +399,22 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             
             X_latih = np.array(X_latih)
             
-            # --- B. Jalankan PCA ---
             progress.progress(50, text="Menjalankan PCA & mencari Eigenfaces...")
             k = min(50, len(X_latih)-1) if len(X_latih)>1 else 1
             pca = PCA(n_components=k)
             X_pca = pca.fit_transform(X_latih)
             
-            # --- C. Proses Foto Uji ---
             progress.progress(70, text="Memproses foto uji...")
             
             vektor1, _, _ = praproses_dengan_deteksi_wajah(file1.getvalue(), UKURAN)
             vektor2, _, _ = praproses_dengan_deteksi_wajah(file2.getvalue(), UKURAN)
             
-            # Muat gambar berwarna untuk ditampilkan
             gambar1 = muat_gambar_berwarna(file1.getvalue(), UKURAN)
             gambar2 = muat_gambar_berwarna(file2.getvalue(), UKURAN)
             
-            # Proyeksi ke ruang PCA
             proyeksi1 = pca.transform([vektor1])
             proyeksi2 = pca.transform([vektor2])
             
-            # Hitung Cosine Similarity
             kemiripan = cosine_similarity(proyeksi1, proyeksi2)[0][0]
             
             progress.progress(100, text="Selesai!")
@@ -519,7 +446,6 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
                 st.markdown('<div class="pink-badge">🎯 Skor Kemiripan</div>', unsafe_allow_html=True)
                 st.markdown(f"<h1 style='color:#AD1457;font-size:42px;'>{kemiripan:.2%}</h1>", unsafe_allow_html=True)
                 
-                # === KATEGORI KEMIRIPAN ===
                 if kemiripan >= ambang:
                     st.success("✅ **MIRIP**")
                     st.balloons()
