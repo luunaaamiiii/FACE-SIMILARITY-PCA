@@ -1,4 +1,4 @@
-# app.py - VERSI FINAL (TANPA CARD PINK)
+# app.py - VERSI FINAL (CARD PINK UNTUK FOTO & SKOR)
 # =====================================================
 
 import streamlit as st
@@ -121,6 +121,20 @@ st.markdown("""
         }
         .stButton button:hover {
             transform: scale(1.03) translateY(-2px) !important;
+        }
+        /* ===== CARD PINK UNTUK HASIL ===== */
+        .result-card {
+            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
+            padding: 20px !important;
+            border-radius: 15px !important;
+            text-align: center !important;
+            border: 1px solid #F8BBD0 !important;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1) !important;
+            height: 100% !important;
+        }
+        .result-card h3, .result-card h4 {
+            color: #AD1457 !important;
+            margin-bottom: 10px !important;
         }
         .stMetric {
             background: rgba(255, 255, 255, 0.3) !important;
@@ -306,7 +320,7 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             progress_bar.empty()
             
             # ==========================================
-            # 9. TAMPILKAN HASIL (TANPA CARD PINK)
+            # 9. TAMPILKAN HASIL (DENGAN CARD PINK)
             # ==========================================
             st.markdown("---")
             st.subheader("📊 Hasil Deteksi")
@@ -314,15 +328,20 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
             col_r1, col_r2, col_r3 = st.columns([2, 2, 1.5])
             
             with col_r1:
-                st.markdown("#### 📸 Foto Pertama")  # tanpa card
+                st.markdown('<div class="result-card">', unsafe_allow_html=True)
+                st.markdown("#### 📸 Foto Pertama")
                 st.image(img1_color, caption=f"Resize {IMG_SIZE[0]}x{IMG_SIZE[1]}", use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             
             with col_r2:
-                st.markdown("#### 📸 Foto Kedua")   # tanpa card
+                st.markdown('<div class="result-card">', unsafe_allow_html=True)
+                st.markdown("#### 📸 Foto Kedua")
                 st.image(img2_color, caption=f"Resize {IMG_SIZE[0]}x{IMG_SIZE[1]}", use_container_width=True)
+                st.markdown('</div>', unsafe_allow_html=True)
             
             with col_r3:
-                st.markdown("### 🎯 Skor Kemiripan") # tanpa card
+                st.markdown('<div class="result-card">', unsafe_allow_html=True)
+                st.markdown("### 🎯 Skor Kemiripan")
                 st.markdown(f"<h1 style='color:#AD1457;font-size:42px;'>{similarity:.2%}</h1>", unsafe_allow_html=True)
                 
                 if similarity >= threshold:
@@ -336,6 +355,7 @@ if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
                 st.caption(f"Komponen PCA: {k}")
                 st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
                 st.caption(f"Threshold: {threshold:.2f}")
+                st.markdown('</div>', unsafe_allow_html=True)
             
             # ==========================================
             # 10. GRAFIK
