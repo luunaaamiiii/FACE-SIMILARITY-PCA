@@ -183,47 +183,53 @@ st.markdown("""
         /* =========================================================
            ===== NAVIGASI EMOJI DENGAN SAKURA DI BELAKANG =====
            ========================================================= */
-        /* Container untuk 4 tombol emoji */
-        .emoji-nav {
+        .stRadio [role="radiogroup"] {
             display: flex !important;
             justify-content: center !important;
-            gap: 20px !important;
-            padding: 10px 0 !important;
-            background: transparent !important;
-        }
-        /* Setiap tombol emoji */
-        .emoji-btn {
+            gap: 12px !important;
             background: transparent !important;
             border: none !important;
+            padding: 10px 0 !important;
+        }
+        .stRadio [role="radiogroup"] label {
+            background: transparent !important;
+            border: none !important;
+            padding: 6px !important;
             font-size: 32px !important;
-            padding: 10px !important;
+            transition: all 0.3s ease !important;
             cursor: pointer !important;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-            position: relative !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            min-width: 60px !important;
-            min-height: 60px !important;
-            border-radius: 50% !important;
-            z-index: 1 !important;
+            min-width: 50px !important;
+            min-height: 50px !important;
+            text-align: center !important;
+            position: relative !important;
         }
-        /* Hover efek */
-        .emoji-btn:hover {
-            transform: scale(1.2) rotate(8deg) !important;
+        /* Hilangkan bullet radio */
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj {
+            display: none !important;
         }
-        /* ===== EFEK SAKURA DI BELAKANG EMOJI AKTIF ===== */
-        .emoji-btn.active {
-            font-size: 40px !important;
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0 {
+            display: none !important;
+        }
+        /* Hover effect */
+        .stRadio [role="radiogroup"] label:hover {
+            transform: scale(1.25) rotate(5deg) !important;
+            background: transparent !important;
+        }
+        /* ===== SAKURA DI BELAKANG EMOJI AKTIF ===== */
+        .stRadio [role="radiogroup"] label[data-checked="true"] {
+            font-size: 42px !important;
             transform: scale(1) !important;
-            z-index: 2 !important;
+            background: transparent !important;
+            text-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
-        /* Siluet bunga sakura (background) */
-        .emoji-btn.active::before {
+        .stRadio [role="radiogroup"] label[data-checked="true"]::before {
             content: "🌸" !important;
             position: absolute !important;
-            font-size: 85px !important;
-            opacity: 0.5 !important;
+            font-size: 80px !important;
+            opacity: 0.45 !important;
             color: #EC407A !important;
             z-index: -1 !important;
             top: 50% !important;
@@ -231,13 +237,11 @@ st.markdown("""
             transform: translate(-50%, -50%) !important;
             animation: sakuraSpin 6s linear infinite !important;
         }
-        /* Animasi putar sakura */
         @keyframes sakuraSpin {
             0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
             50% { transform: translate(-50%, -50%) rotate(8deg) scale(1.05); }
             100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
         }
-        /* Caption di bawah */
         .sidebar-caption {
             text-align: center;
             color: #AD1457;
@@ -635,32 +639,25 @@ def halaman_deteksi():
                     """, unsafe_allow_html=True)
 
 # ==========================================
-# 5. NAVIGASI SIDEBAR (EMOJI + EFEK SAKURA)
+# 5. NAVIGASI SIDEBAR (RADIO HORIZONTAL)
 # ==========================================
 st.sidebar.markdown("🌸 **Haloo!!**")
+menu = st.sidebar.radio(
+    "",
+    ["🏠", "🌫️", "🗜️", "🔍"],
+    index=0,
+    horizontal=True,
+    key="menu_radio"
+)
 
-# Definisikan menu dan icon
-menu_items = ["🏠", "🌫️", "🗜️", "🔍"]
-menu_labels = ["Home", "Grayscale", "Kompresi", "Deteksi Kemiripan"]
 page_map = {
     "🏠": "🏠 Home",
     "🌫️": "🌫️ Grayscale",
     "🗜️": "🗜️ Kompresi",
     "🔍": "🔍 Deteksi Kemiripan"
 }
+st.session_state.page = page_map[menu]
 
-# Buat 4 tombol emoji dalam 1 baris
-cols = st.sidebar.columns(4)
-for i, (col, emoji) in enumerate(zip(cols, menu_items)):
-    with col:
-        # Tombol emoji dengan CSS class
-        is_active = st.session_state.page == page_map[emoji]
-        btn_class = "emoji-btn active" if is_active else "emoji-btn"
-        if st.button(emoji, key=f"nav_{i}", use_container_width=True):
-            st.session_state.page = page_map[emoji]
-            st.rerun()
-
-# Keterangan fitur di bawah emoji
 st.sidebar.markdown("---")
 if st.session_state.page == "🏠 Home":
     st.sidebar.markdown('<p class="sidebar-caption">📌 Beranda & Profil</p>', unsafe_allow_html=True)
