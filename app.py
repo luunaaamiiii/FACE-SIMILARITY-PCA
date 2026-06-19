@@ -22,7 +22,6 @@ try:
     SKIMAGE_AVAILABLE = True
 except ImportError:
     SKIMAGE_AVAILABLE = False
-    st.warning("⚠️ Library 'scikit-image' tidak terinstall. Fitur kompresi akan berjalan tanpa SSIM & PSNR. Tambahkan 'scikit-image' ke requirements.txt untuk metrik lengkap.")
 
 # ==========================================
 # 1. PENGATURAN HALAMAN
@@ -58,13 +57,6 @@ st.markdown("""
             color: #FFFFFF !important;
             fill: #FFFFFF !important;
         }
-        header .st-emotion-cache-1v0mbdj, header .st-emotion-cache-1r6slb0 {
-            color: #FFFFFF !important;
-        }
-        header button:hover {
-            transform: scale(1.05) !important;
-            transition: 0.3s !important;
-        }
         .css-1d391kg, .css-12w0qpk, [data-testid="stSidebar"] {
             background: linear-gradient(180deg, #FCE4EC, #FFF0F5) !important;
             border-right: 2px solid #F8BBD0 !important;
@@ -90,6 +82,8 @@ st.markdown("""
             color: #AD1457 !important;
             font-weight: bold !important;
         }
+
+        /* ===== TOMBOL ===== */
         .stButton button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
             color: white !important;
@@ -104,8 +98,8 @@ st.markdown("""
             transform: scale(1.03) translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
         }
-        
-        /* ===== FILE UPLOADER (TEKS PUTIH) ===== */
+
+        /* ===== FILE UPLOADER ===== */
         .stFileUploader {
             background: rgba(255, 255, 255, 0.5) !important;
             border: 2px dashed #EC407A !important;
@@ -118,8 +112,7 @@ st.markdown("""
             padding: 20px !important;
         }
         .stFileUploader * {
-            color: #FFFFFF !important;
-            font-weight: 500 !important;
+            color: #6A1B4D !important;
         }
         .stFileUploader button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
@@ -134,10 +127,14 @@ st.markdown("""
         .stFileUploader:hover {
             border-color: #D81B60 !important;
         }
+
+        /* ===== SLIDER ===== */
         .stSlider > div {
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
+
+        /* ===== BADGE ===== */
         .pink-badge {
             display: inline-block;
             background: linear-gradient(135deg, #FCE4EC, #F8BBD0) !important;
@@ -150,6 +147,8 @@ st.markdown("""
             box-shadow: 0 2px 8px rgba(233, 30, 99, 0.12) !important;
             margin-bottom: 8px !important;
         }
+
+        /* ===== CARD ===== */
         .result-card {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             padding: 20px !important;
@@ -171,86 +170,75 @@ st.markdown("""
             color: #AD1457 !important;
         }
 
-        /* =========================================================
-           ===== NAVIGASI EMOJI SIDEBAR =====
-           ========================================================= */
-        .emoji-nav {
+        /* ===== NAVIGASI EMOJI (RADIO HORIZONTAL) ===== */
+        .stRadio [role="radiogroup"] {
             display: flex !important;
             justify-content: center !important;
-            gap: 10px !important;
-            padding: 5px 0 !important;
-        }
-        .emoji-btn {
+            gap: 12px !important;
             background: transparent !important;
             border: none !important;
+            padding: 10px 0 !important;
+        }
+        .stRadio [role="radiogroup"] label {
+            background: transparent !important;
+            border: none !important;
+            padding: 6px !important;
             font-size: 32px !important;
+            transition: all 0.3s ease !important;
             cursor: pointer !important;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-            padding: 5px !important;
-            position: relative !important;
-            z-index: 1 !important;
-            min-width: 48px !important;
-            min-height: 48px !important;
-            display: flex !important;
+            display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
+            min-width: 50px !important;
+            min-height: 50px !important;
+            text-align: center !important;
+            position: relative !important;
         }
-        .emoji-btn:hover {
-            transform: scale(1.2) rotate(8deg) !important;
+        /* Hilangkan bullet radio */
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj {
+            display: none !important;
         }
-        /* Aktif: lebih besar + bunga sakura di belakang */
-        .emoji-btn.active {
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0 {
+            display: none !important;
+        }
+        /* Hover effect */
+        .stRadio [role="radiogroup"] label:hover {
+            transform: scale(1.25) rotate(5deg) !important;
+            background: transparent !important;
+        }
+        /* Active / selected */
+        .stRadio [role="radiogroup"] label[data-checked="true"] {
             font-size: 42px !important;
             transform: scale(1) !important;
-            animation: pulse 2s ease-in-out infinite !important;
+            background: transparent !important;
+            text-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
-        .emoji-btn.active::before {
-            content: "🌸" !important;
-            position: absolute !important;
-            font-size: 80px !important;
-            opacity: 0.4 !important;
-            color: #EC407A !important;
-            z-index: -1 !important;
-            animation: spin 8s linear infinite !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            50% { transform: translate(-50%, -50%) rotate(10deg) scale(1.05); }
-            100% { transform: translate(-50%, -50%) rotate(0deg); }
-        }
+        /* Caption di bawah emoji */
         .sidebar-caption {
             text-align: center;
             color: #AD1457;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             padding-top: 5px;
         }
     </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. SESSION STATE UNTUK NAVIGASI
+# 3. SESSION STATE
 # ==========================================
 if "page" not in st.session_state:
     st.session_state.page = "🏠 Home"
 
 # ==========================================
-# 4. FUNGSI HALAMAN (Home, Grayscale, Kompresi, Deteksi)
+# 4. FUNGSI HALAMAN
 # ==========================================
 
-# ---------- Home ----------
+# ---------- HOME ----------
 def halaman_home():
     st.markdown('<h1 class="main-title">🌸 Selamat Datang di Aplikasi PCA</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Kelompok 2 – Aljabar Linier / Computer Vision</p>', unsafe_allow_html=True)
-    
+
     col1, col2 = st.columns([2, 1])
     with col1:
         st.markdown("""
@@ -266,7 +254,6 @@ def halaman_home():
         Gunakan menu emoji di samping untuk memilih fitur.
         </div>
         """, unsafe_allow_html=True)
-    
     with col2:
         st.markdown("""
         <div class="result-card">
@@ -279,11 +266,11 @@ def halaman_home():
         </div>
         """, unsafe_allow_html=True)
 
-# ---------- Grayscale ----------
+# ---------- GRAYSCALE ----------
 def halaman_grayscale():
     st.markdown('<h1 class="main-title">🌫️ Konversi ke Grayscale</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Upload gambar berwarna, lihat hasil hitam-putih</p>', unsafe_allow_html=True)
-    
+
     file = st.file_uploader("Upload gambar (JPG/PNG)", type=["jpg", "jpeg", "png"])
     if file is not None:
         img = Image.open(file)
@@ -293,7 +280,6 @@ def halaman_grayscale():
         with col2:
             gray = img.convert("L")
             st.image(gray, caption="Hasil Grayscale", use_container_width=True)
-        
         st.markdown(f"""
         <div class="explanation-box">
         <b>Informasi:</b><br>
@@ -302,26 +288,26 @@ def halaman_grayscale():
         </div>
         """, unsafe_allow_html=True)
 
-# ---------- Kompresi PCA ----------
+# ---------- KOMPRESI ----------
 def halaman_kompresi():
     st.markdown('<h1 class="main-title">🗜️ Kompresi Gambar dengan PCA</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Upload gambar, atur jumlah komponen, lihat hasil kompresi & metrik kualitas</p>', unsafe_allow_html=True)
-    
+
     file = st.file_uploader("Upload gambar (JPG/PNG)", type=["jpg", "jpeg", "png"])
     if file is not None:
         img = Image.open(file).convert("L")
         img_np = np.array(img, dtype=np.float64)
         h, w = img_np.shape
-        
+
         if h > 300 or w > 300:
             st.warning("Gambar terlalu besar, akan di-resize ke 256x256 agar proses cepat")
             img_resized = img.resize((256, 256))
             img_np = np.array(img_resized, dtype=np.float64)
             h, w = img_np.shape
-        
+
         k_max = min(h, w)
         k = st.slider("Jumlah komponen PCA (k)", min_value=1, max_value=k_max, value=min(50, k_max), step=1)
-        
+
         mean_col = np.mean(img_np, axis=0)
         centered = img_np - mean_col
         cov = np.cov(centered, rowvar=False)
@@ -333,7 +319,7 @@ def halaman_kompresi():
         proj = centered @ Vk
         rekon = proj @ Vk.T + mean_col
         rekon = np.clip(rekon, 0, 255).astype(np.uint8)
-        
+
         img_uint8 = img_np.astype(np.uint8)
         if SKIMAGE_AVAILABLE:
             ssim_val = ssim(img_uint8, rekon, data_range=255)
@@ -341,24 +327,24 @@ def halaman_kompresi():
         else:
             ssim_val = "Tidak tersedia"
             psnr_val = "Tidak tersedia"
-        
+
         original_size = h * w
         compressed_size = h * k + w * k
         compression_ratio = compressed_size / original_size
         saving = (1 - compression_ratio) * 100
-        
+
         col1, col2 = st.columns(2)
         with col1:
             st.image(img_uint8, caption="Gambar Asli (Grayscale)", use_container_width=True)
         with col2:
             st.image(rekon, caption=f"Hasil Kompresi (k={k})", use_container_width=True)
-        
+
         st.markdown("### 📊 Metrik Kualitas")
-        metrik_col1, metrik_col2, metrik_col3 = st.columns(3)
-        metrik_col1.metric("SSIM", f"{ssim_val:.4f}" if isinstance(ssim_val, float) else ssim_val)
-        metrik_col2.metric("PSNR", f"{psnr_val:.2f} dB" if isinstance(psnr_val, float) else psnr_val)
-        metrik_col3.metric("Penghematan", f"{saving:.1f}%")
-        
+        c1, c2, c3 = st.columns(3)
+        c1.metric("SSIM", f"{ssim_val:.4f}" if isinstance(ssim_val, float) else ssim_val)
+        c2.metric("PSNR", f"{psnr_val:.2f} dB" if isinstance(psnr_val, float) else psnr_val)
+        c3.metric("Penghematan", f"{saving:.1f}%")
+
         st.markdown(f"""
         <div class="explanation-box">
         <b>Detail Kompresi:</b><br>
@@ -368,7 +354,7 @@ def halaman_kompresi():
         • Jumlah komponen PCA: {k}
         </div>
         """, unsafe_allow_html=True)
-        
+
         total_var = np.sum(eigen_vals)
         cum_var = np.cumsum(eigen_vals) / total_var
         fig, ax = plt.subplots(figsize=(8, 4))
@@ -382,14 +368,14 @@ def halaman_kompresi():
         ax.grid(True, alpha=0.3)
         st.pyplot(fig)
 
-# ---------- Deteksi Kemiripan ----------
+# ---------- DETEKSI KEMIRIPAN (FITUR UTAMA) ----------
 def halaman_deteksi():
     st.markdown('<h1 class="main-title">🔍 Deteksi Kemiripan Wajah</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">Bandingkan dua wajah dengan metode Eigenfaces (PCA)</p>', unsafe_allow_html=True)
-    
+
     if "show_upload" not in st.session_state:
         st.session_state.show_upload = True
-    
+
     with st.expander("📂 Upload Data Latih (minimal 10 foto)", expanded=st.session_state.show_upload):
         file_latih = st.file_uploader(
             "Pilih minimal 10 foto wajah (2 orang, masing-masing 5+ foto)",
@@ -401,15 +387,15 @@ def halaman_deteksi():
             st.success(f"✅ {len(file_latih)} foto terupload!")
         else:
             st.warning("⬆️ Upload foto di sini")
-    
+
     col1, col2 = st.columns(2)
     with col1:
         file1 = st.file_uploader("Foto Pertama", type=["jpg","jpeg","png"], key="f1_deteksi")
     with col2:
         file2 = st.file_uploader("Foto Kedua", type=["jpg","jpeg","png"], key="f2_deteksi")
-    
+
     ambang = st.slider("🎯 Ambang Batas Kemiripan", 0.0, 1.0, 0.70, 0.05, key="threshold_deteksi")
-    
+
     if st.button("🚀 Proses Deteksi", use_container_width=True):
         if 'file_latih' not in locals() or not file_latih or len(file_latih) < 10:
             st.error("⚠️ **Data Latih Kurang!** Upload minimal 10 foto.")
@@ -418,7 +404,7 @@ def halaman_deteksi():
         else:
             with st.spinner("⏳ Memproses..."):
                 time.sleep(0.5)
-                
+
                 def deteksi_dan_potong_wajah(byte_gambar):
                     arr_np = np.frombuffer(byte_gambar, np.uint8)
                     img = cv2.imdecode(arr_np, cv2.IMREAD_COLOR)
@@ -431,13 +417,13 @@ def halaman_deteksi():
                         x, y, w, h = max(wajah, key=lambda rect: rect[2] * rect[3])
                         return abu[y:y+h, x:x+w], True
                     return abu, False
-                
+
                 def praproses(byte_gambar, ukuran=(100, 100)):
-                    potongan, terdeteksi = deteksi_dan_potong_wajah(byte_gambar)
+                    potongan, _ = deteksi_dan_potong_wajah(byte_gambar)
                     resize = cv2.resize(potongan, ukuran)
                     normal = resize / 255.0
-                    return normal.flatten(), resize, terdeteksi
-                
+                    return normal.flatten(), resize
+
                 def muat_warna(byte_gambar, ukuran=(100, 100)):
                     arr_np = np.frombuffer(byte_gambar, np.uint8)
                     img = cv2.imdecode(arr_np, cv2.IMREAD_COLOR)
@@ -454,31 +440,30 @@ def halaman_deteksi():
                     else:
                         resize = cv2.resize(img, ukuran)
                         return cv2.cvtColor(resize, cv2.COLOR_BGR2RGB)
-                
+
                 UKURAN = (100, 100)
                 X_latih = []
                 progress = st.progress(0)
                 for i, f in enumerate(file_latih):
-                    vektor, _, _ = praproses(f.getvalue(), UKURAN)
+                    vektor, _ = praproses(f.getvalue(), UKURAN)
                     X_latih.append(vektor)
                     progress.progress((i+1)/len(file_latih))
                 X_latih = np.array(X_latih)
-                
+
                 k = min(50, len(X_latih)-1) if len(X_latih)>1 else 1
                 pca = PCA(n_components=k)
                 pca.fit(X_latih)
-                
-                v1, _, _ = praproses(file1.getvalue(), UKURAN)
-                v2, _, _ = praproses(file2.getvalue(), UKURAN)
+
+                v1, _ = praproses(file1.getvalue(), UKURAN)
+                v2, _ = praproses(file2.getvalue(), UKURAN)
                 img1_warna = muat_warna(file1.getvalue(), UKURAN)
                 img2_warna = muat_warna(file2.getvalue(), UKURAN)
-                
+
                 proj1 = pca.transform([v1])
                 proj2 = pca.transform([v2])
                 kemiripan = cosine_similarity(proj1, proj2)[0][0]
-                
                 progress.empty()
-                
+
                 st.markdown("---")
                 st.subheader("📊 Hasil Deteksi")
                 col_r1, col_r2, col_r3 = st.columns([2, 2, 1.5])
@@ -506,7 +491,7 @@ def halaman_deteksi():
                     st.caption(f"Komponen PCA: {k}")
                     st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
                     st.markdown('</div>', unsafe_allow_html=True)
-                
+
                 st.subheader("📈 Grafik Akumulasi Informasi")
                 varians = np.cumsum(pca.explained_variance_ratio_)
                 fig, ax = plt.subplots(figsize=(8, 4))
@@ -521,99 +506,24 @@ def halaman_deteksi():
                 st.pyplot(fig)
 
 # ==========================================
-# 5. NAVIGASI SIDEBAR (TOMBOLEMOJI)
+# 5. NAVIGASI SIDEBAR (RADIO HORIZONTAL)
 # ==========================================
 st.sidebar.markdown("🌸 **Haloo!!**")
+menu = st.sidebar.radio(
+    "",
+    ["🏠", "🌫️", "🗜️", "🔍"],
+    index=0,
+    horizontal=True,
+    key="menu_radio"
+)
 
-# Buat 4 tombol emoji dalam 1 baris
-cols = st.sidebar.columns(4)
-emoji_list = ["🏠", "🌫️", "🗜️", "🔍"]
 page_map = {
     "🏠": "🏠 Home",
     "🌫️": "🌫️ Grayscale",
     "🗜️": "🗜️ Kompresi",
     "🔍": "🔍 Deteksi Kemiripan"
 }
-
-for i, (col, emoji) in enumerate(zip(cols, emoji_list)):
-    with col:
-        # Tentukan class aktif
-        is_active = st.session_state.page == page_map[emoji]
-        btn_class = "emoji-btn active" if is_active else "emoji-btn"
-        if st.button(
-            emoji, 
-            key=f"nav_{i}",
-            use_container_width=True,
-            help=f"Ke {page_map[emoji]}"
-        ):
-            st.session_state.page = page_map[emoji]
-            st.rerun()
-        # Tambahkan class via HTML (karena st.button tidak support class)
-        st.markdown(f"""
-        <style>
-            div[data-testid="stButton"] button {{
-                background: transparent !important;
-                border: none !important;
-                font-size: 32px !important;
-                padding: 5px !important;
-                min-width: 48px !important;
-                min-height: 48px !important;
-                position: relative !important;
-                z-index: 1 !important;
-                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-            }}
-            div[data-testid="stButton"] button:hover {{
-                transform: scale(1.2) rotate(8deg) !important;
-                background: transparent !important;
-            }}
-            div[data-testid="stButton"] button:active {{
-                transform: scale(0.95) !important;
-            }}
-            /* Style untuk tombol aktif */
-            div[data-testid="stButton"] button.active {{
-                font-size: 42px !important;
-                transform: scale(1) !important;
-                animation: pulse 2s ease-in-out infinite !important;
-            }}
-            div[data-testid="stButton"] button.active::before {{
-                content: "🌸" !important;
-                position: absolute !important;
-                font-size: 80px !important;
-                opacity: 0.4 !important;
-                color: #EC407A !important;
-                z-index: -1 !important;
-                animation: spin 8s linear infinite !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-            }}
-            @keyframes pulse {{
-                0% {{ transform: scale(1); }}
-                50% {{ transform: scale(1.08); }}
-                100% {{ transform: scale(1); }}
-            }}
-            @keyframes spin {{
-                0% {{ transform: translate(-50%, -50%) rotate(0deg); }}
-                50% {{ transform: translate(-50%, -50%) rotate(10deg) scale(1.05); }}
-                100% {{ transform: translate(-50%, -50%) rotate(0deg); }}
-            }}
-        </style>
-        """, unsafe_allow_html=True)
-        
-        # Tambahkan class 'active' ke tombol yang aktif dengan JavaScript
-        if is_active:
-            st.markdown("""
-            <script>
-                (function() {
-                    const btns = document.querySelectorAll('div[data-testid="stButton"] button');
-                    btns.forEach(btn => {
-                        if (btn.textContent.trim() === '""" + emoji + """') {
-                            btn.classList.add('active');
-                        }
-                    });
-                })();
-            </script>
-            """, unsafe_allow_html=True)
+st.session_state.page = page_map[menu]
 
 # Keterangan fitur di bawah emoji
 st.sidebar.markdown("---")
