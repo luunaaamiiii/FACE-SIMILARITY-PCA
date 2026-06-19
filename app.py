@@ -33,7 +33,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS - TEMA PINK + TOMBOL BESAR
+# 2. CSS - TEMA PINK + TOMBOL 48px, EMOJI 48px
 # ==========================================
 st.markdown("""
     <style>
@@ -181,19 +181,19 @@ st.markdown("""
         }
 
         /* =========================================================
-           ===== NAVIGASI TOMBOL (BESAR + ANIMASI) =====
+           ===== NAVIGASI TOMBOL (48px, EMOJI 48px) =====
            ========================================================= */
         .stSidebar .stButton button {
-            width: 60px !important;
-            height: 60px !important;
-            min-width: 60px !important;
-            min-height: 60px !important;
-            max-width: 60px !important;
-            max-height: 60px !important;
+            width: 48px !important;
+            height: 48px !important;
+            min-width: 48px !important;
+            min-height: 48px !important;
+            max-width: 48px !important;
+            max-height: 48px !important;
             border-radius: 50% !important;
             border: none !important;
             background: transparent !important;
-            font-size: 32px !important;
+            font-size: 48px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -605,7 +605,7 @@ def halaman_deteksi():
                     """, unsafe_allow_html=True)
 
 # ==========================================
-# 5. NAVIGASI SIDEBAR (TOMBOL BESAR + AKTIF TURUN)
+# 5. NAVIGASI SIDEBAR (TOMBOL 48px, EMOJI 48px)
 # ==========================================
 st.sidebar.markdown("🌸 **Haloo!!**")
 
