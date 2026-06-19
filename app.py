@@ -1,4 +1,4 @@
-# app.py - VERSI FINAL (PAKSA TEMA LIGHT + UPLOADER PINK)
+# app.py - VERSI FINAL DENGAN CSS AGGRESIF
 # =====================================================
 
 import streamlit as st
@@ -11,126 +11,61 @@ import cv2
 import time
 
 # ==========================================
-# 1. PENGATURAN HALAMAN (PAKSA LIGHT MODE)
+# 1. PENGATURAN HALAMAN
 # ==========================================
 st.set_page_config(
     page_title="PCA Face Similarity",
     page_icon="🌸",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ==========================================
-# 2. CSS SANGAT KUAT (UNGGULI DARK MODE)
+# 2. CSS UTAMA
 # ==========================================
 st.markdown("""
     <style>
-        /* === RESET SEMUA WARNA GELAP === */
-        .stApp, .main, .block-container, section.main, div[data-testid="stSidebar"] {
-            background-color: #FFF0F5 !important;
-            background-image: none !important;
-            color: #6A1B4D !important;
+        /* ===== BACKGROUND UTAMA ===== */
+        .stApp {
+            background: linear-gradient(135deg, #FFF0F5, #FFE4E9, #FCE4EC) !important;
         }
-
-        /* === SEMUA TEKS JADI PINK === */
-        body, p, div, span, label, h1, h2, h3, h4, h5, h6 {
-            color: #6A1B4D !important;
+        .main > div {
+            background: transparent !important;
         }
-
-        /* === HEADER (BAR ATAS) ===== */
+        
+        /* ===== HEADER / TOP BAR ===== */
         header {
-            background: linear-gradient(135deg, #880E4F, #AD1457) !important;
+            background: linear-gradient(135deg, #880E4F, #AD1457, #880E4F) !important;
             border-bottom: 2px solid #F8BBD0 !important;
+            box-shadow: 0 2px 15px rgba(136, 14, 79, 0.3) !important;
         }
-
-        /* === SIDEBAR ===== */
+        
+        /* ===== SIDEBAR ===== */
         .css-1d391kg, .css-12w0qpk, [data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #FCE4EC, #FFF0F5) !important;
+            background: linear-gradient(180deg, #FCE4EC 0%, #FFF0F5 100%) !important;
             border-right: 2px solid #F8BBD0 !important;
         }
-
-        /* === JUDUL ===== */
+        
+        /* ===== JUDUL ===== */
         .main-title {
+            text-align: center;
             color: #AD1457 !important;
             font-size: 42px !important;
             font-weight: bold !important;
             text-shadow: 0 2px 15px rgba(173, 20, 87, 0.2) !important;
         }
         .sub-title {
+            text-align: center;
             color: #D81B60 !important;
             font-size: 18px !important;
+            text-shadow: 0 1px 10px rgba(216, 27, 96, 0.15) !important;
         }
-
-        /* === SEMUA HEADING ===== */
+        
+        /* ===== SEMUA HEADING ===== */
         h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4 {
             color: #AD1457 !important;
             font-weight: bold !important;
         }
-
-        /* =========================================================
-           ===== FILE UPLOADER (PAKSA PINK) =====
-           ========================================================= */
-
-        /* Container utama file uploader */
-        div[data-testid="stFileUploader"] {
-            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
-            border: 2px dashed #EC407A !important;
-            border-radius: 12px !important;
-            padding: 10px !important;
-            box-shadow: none !important;
-        }
-
-        /* Area drop zone */
-        div[data-testid="stFileUploader"] > div {
-            background: rgba(255, 255, 255, 0.6) !important;
-            border-radius: 8px !important;
-            padding: 20px !important;
-        }
-
-        /* Semua teks di dalam uploader */
-        div[data-testid="stFileUploader"] label,
-        div[data-testid="stFileUploader"] p,
-        div[data-testid="stFileUploader"] span,
-        div[data-testid="stFileUploader"] div {
-            color: #6A1B4D !important;
-            background: transparent !important;
-        }
-
-        /* Tulisan "Upload" besar */
-        div[data-testid="stFileUploader"] .st-emotion-cache-1v0mbdj {
-            color: #6A1B4D !important;
-            font-weight: bold !important;
-            font-size: 18px !important;
-        }
-
-        /* Tulisan "200MB per file..." */
-        div[data-testid="stFileUploader"] .st-emotion-cache-1r6slb0 {
-            color: #8B4A6D !important;
-        }
-
-        /* Tombol "Browse files" */
-        div[data-testid="stFileUploader"] button {
-            background: linear-gradient(135deg, #EC407A, #D81B60) !important;
-            color: white !important;
-            border-radius: 20px !important;
-            border: none !important;
-            padding: 5px 20px !important;
-            transition: 0.3s !important;
-        }
-        div[data-testid="stFileUploader"] button:hover {
-            transform: scale(1.05) !important;
-            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3) !important;
-        }
-
-        /* Hover pada area upload */
-        div[data-testid="stFileUploader"]:hover {
-            border-color: #D81B60 !important;
-            background: linear-gradient(135deg, #F8BBD0, #FCE4EC) !important;
-        }
-        div[data-testid="stFileUploader"]:hover > div {
-            background: rgba(255, 255, 255, 0.8) !important;
-        }
-
+        
         /* ===== TOMBOL SAKURA DI SIDEBAR ===== */
         .sakura-btn-container .stButton button {
             background: transparent !important;
@@ -152,7 +87,7 @@ st.markdown("""
             background: rgba(236, 64, 122, 0.2) !important;
             box-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
-
+        
         /* ===== TOMBOL PROSES ===== */
         .stButton button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
@@ -168,7 +103,7 @@ st.markdown("""
             transform: scale(1.03) translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
         }
-
+        
         /* ===== CARD HASIL ===== */
         .result-card {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
@@ -178,23 +113,93 @@ st.markdown("""
             border: 1px solid #F8BBD0 !important;
             box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1) !important;
         }
-
+        
         /* ===== SLIDER ===== */
         .stSlider > div {
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
-
+        
         /* ===== METRIC ===== */
         .stMetric {
             background: rgba(255, 255, 255, 0.3) !important;
             border-radius: 12px !important;
             padding: 10px !important;
         }
-
-        /* ===== SUCCESS / WARNING / ERROR ===== */
-        .stAlert {
+        
+        /* =========================================================
+           ===== FILE UPLOADER - AGGRESIF =====
+           ========================================================= */
+        
+        /* Container utama */
+        div[data-testid="stFileUploader"],
+        .stFileUploader,
+        .st-emotion-cache-1v0mbdj,
+        .st-emotion-cache-1r6slb0,
+        .st-emotion-cache-1wmy9hl {
+            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
+            border: 2px dashed #EC407A !important;
             border-radius: 12px !important;
+            padding: 10px !important;
+            box-shadow: none !important;
+        }
+        
+        /* Area drop zone */
+        div[data-testid="stFileUploader"] > div,
+        .stFileUploader > div,
+        .st-emotion-cache-1wmy9hl > div {
+            background: rgba(255, 255, 255, 0.5) !important;
+            border-radius: 8px !important;
+            padding: 20px !important;
+        }
+        
+        /* Semua teks di dalam uploader */
+        div[data-testid="stFileUploader"] *,
+        .stFileUploader *,
+        .st-emotion-cache-1v0mbdj *,
+        .st-emotion-cache-1r6slb0 * {
+            color: #6A1B4D !important;
+            background: transparent !important;
+        }
+        
+        /* Tulisan "Upload" besar */
+        .st-emotion-cache-1v0mbdj {
+            color: #6A1B4D !important;
+            font-weight: bold !important;
+            font-size: 18px !important;
+        }
+        
+        /* Tulisan "200MB per file" */
+        .st-emotion-cache-1r6slb0 {
+            color: #8B4A6D !important;
+        }
+        
+        /* Tombol "Browse files" */
+        div[data-testid="stFileUploader"] button,
+        .stFileUploader button,
+        .st-emotion-cache-1wmy9hl button {
+            background: linear-gradient(135deg, #EC407A, #D81B60) !important;
+            color: white !important;
+            border-radius: 20px !important;
+            border: none !important;
+            padding: 5px 20px !important;
+            transition: 0.3s !important;
+        }
+        div[data-testid="stFileUploader"] button:hover,
+        .stFileUploader button:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3) !important;
+        }
+        
+        /* Hover effect */
+        div[data-testid="stFileUploader"]:hover,
+        .stFileUploader:hover {
+            border-color: #D81B60 !important;
+            background: linear-gradient(135deg, #F8BBD0, #FCE4EC) !important;
+        }
+        div[data-testid="stFileUploader"]:hover > div,
+        .stFileUploader:hover > div {
+            background: rgba(255, 255, 255, 0.7) !important;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -297,7 +302,66 @@ with col2:
     face2_file = st.file_uploader("Upload Foto 2", type=["jpg","jpeg","png"], key="f2", label_visibility="collapsed")
 
 # ==========================================
-# 8. TOMBOL PROSES
+# 8. CSS TAMBAHAN (DI RENDER SETELAH ELEMEN)
+# ==========================================
+st.markdown("""
+    <style>
+        /* === CSS EKSTRA UNTUK MEMAKSA LIGHT MODE === */
+        /* Target semua kemungkinan class file uploader */
+        .stFileUploader, .st-emotion-cache-1v0mbdj, .st-emotion-cache-1r6slb0, 
+        .st-emotion-cache-1wmy9hl, .st-emotion-cache-1t6c9ev, .st-emotion-cache-1h9usn,
+        .st-emotion-cache-1gv3hhu, .st-emotion-cache-16idsys, .st-emotion-cache-1v3m2zr {
+            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
+            border-color: #EC407A !important;
+            color: #6A1B4D !important;
+        }
+        
+        /* Background area dalam uploader */
+        .stFileUploader > div, .st-emotion-cache-1wmy9hl > div {
+            background: rgba(255, 255, 255, 0.6) !important;
+        }
+        
+        /* Semua teks dalam uploader */
+        .stFileUploader label, .stFileUploader p, .stFileUploader span, 
+        .stFileUploader div, .st-emotion-cache-1v0mbdj, .st-emotion-cache-1r6slb0 {
+            color: #6A1B4D !important;
+            background: transparent !important;
+        }
+        
+        /* Tulisan "Upload" */
+        .st-emotion-cache-1v0mbdj {
+            color: #6A1B4D !important;
+            font-weight: bold !important;
+        }
+        
+        /* Tulisan "200MB per file" */
+        .st-emotion-cache-1r6slb0 {
+            color: #8B4A6D !important;
+        }
+        
+        /* Tombol upload */
+        .stFileUploader button, .st-emotion-cache-1wmy9hl button {
+            background: linear-gradient(135deg, #EC407A, #D81B60) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 20px !important;
+        }
+        
+        /* Background seluruh area konten */
+        .main, .block-container, section.main {
+            background: #FFF0F5 !important;
+            background-image: none !important;
+        }
+        
+        /* Sidebar */
+        .css-1d391kg, .css-12w0qpk, [data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #FCE4EC, #FFF0F5) !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# ==========================================
+# 9. TOMBOL PROSES
 # ==========================================
 if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
     if 'uploaded_train_files' not in locals() or not uploaded_train_files or len(uploaded_train_files) < 10:
