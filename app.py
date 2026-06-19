@@ -33,7 +33,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS - TEMA PINK SOFT + NAVIGASI EMOJI
+# 2. CSS - TEMA PINK SOFT + UPLOADER TERANG
 # ==========================================
 st.markdown("""
     <style>
@@ -99,34 +99,34 @@ st.markdown("""
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
         }
 
-        /* ===== FILE UPLOADER ===== */
-        .stFileUploader {
-            background: rgba(255, 255, 255, 0.5) !important;
+        /* ===== FILE UPLOADER (PAKSA PINK/TERANG) ===== */
+        div[data-testid="stFileUploader"] {
+            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             border: 2px dashed #EC407A !important;
             border-radius: 12px !important;
             padding: 10px !important;
         }
-        .stFileUploader > div {
-            background: rgba(255, 255, 255, 0.6) !important;
+        div[data-testid="stFileUploader"] > div {
+            background: rgba(255, 255, 255, 0.7) !important;
             border-radius: 8px !important;
             padding: 20px !important;
         }
-        /* === TEKS UPLOADER JADI HITAM (ITEM) === */
-        .stFileUploader * {
-            color: #000000 !important;
+        div[data-testid="stFileUploader"] * {
+            color: #6A1B4D !important;
         }
-        .stFileUploader button {
+        div[data-testid="stFileUploader"] button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
             color: white !important;
             border: none !important;
             border-radius: 20px !important;
             padding: 5px 20px !important;
         }
-        .stFileUploader button:hover {
+        div[data-testid="stFileUploader"] button:hover {
             transform: scale(1.05) !important;
         }
-        .stFileUploader:hover {
+        div[data-testid="stFileUploader"]:hover {
             border-color: #D81B60 !important;
+            background: linear-gradient(135deg, #F8BBD0, #FCE4EC) !important;
         }
 
         /* ===== SLIDER ===== */
@@ -195,26 +195,22 @@ st.markdown("""
             text-align: center !important;
             position: relative !important;
         }
-        /* Hilangkan bullet radio */
         .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj {
             display: none !important;
         }
         .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0 {
             display: none !important;
         }
-        /* Hover effect */
         .stRadio [role="radiogroup"] label:hover {
             transform: scale(1.25) rotate(5deg) !important;
             background: transparent !important;
         }
-        /* Active / selected */
         .stRadio [role="radiogroup"] label[data-checked="true"] {
             font-size: 42px !important;
             transform: scale(1) !important;
             background: transparent !important;
             text-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
-        /* Caption di bawah emoji */
         .sidebar-caption {
             text-align: center;
             color: #AD1457;
