@@ -115,8 +115,9 @@ st.markdown("""
             border-radius: 8px !important;
             padding: 20px !important;
         }
+        /* === TEKS UPLOADER JADI PUTIH === */
         .stFileUploader * {
-            color: #6A1B4D !important;
+            color: #FFFFFF !important;
         }
         .stFileUploader button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
@@ -171,7 +172,7 @@ st.markdown("""
         /* =========================================================
            ===== NAVIGASI EMOJI (RADIO BUTTON HORIZONTAL) =====
            ========================================================= */
-        /* Hapus border dan background radio */
+        /* Sembunyikan radio button default */
         .stRadio [role="radiogroup"] {
             display: flex !important;
             justify-content: center !important;
@@ -180,6 +181,7 @@ st.markdown("""
             border: none !important;
             padding: 0 !important;
         }
+        /* Gaya label emoji */
         .stRadio [role="radiogroup"] label {
             background: transparent !important;
             border: none !important;
@@ -190,28 +192,28 @@ st.markdown("""
             display: inline-block !important;
             min-width: 45px !important;
             text-align: center !important;
+            position: relative !important;
+        }
+        /* Hilangkan bullet radio */
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj {
+            display: none !important;
+        }
+        .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0 {
+            display: none !important;
         }
         /* Hover effect */
         .stRadio [role="radiogroup"] label:hover {
             transform: scale(1.25) rotate(5deg) !important;
             background: transparent !important;
         }
-        /* Active / selected effect */
+        /* Active / selected effect - lebih besar */
         .stRadio [role="radiogroup"] label[data-checked="true"] {
             font-size: 48px !important;
             transform: scale(1) !important;
             background: transparent !important;
             text-shadow: 0 0 20px rgba(236, 64, 122, 0.4) !important;
         }
-        /* Sembunyikan bullet radio default */
-        .stRadio [role="radiogroup"] label .st-emotion-cache-1v0mbdj {
-            display: none !important;
-        }
-        /* Sembunyikan teks default (emoji tetap muncul) */
-        .stRadio [role="radiogroup"] label .st-emotion-cache-1r6slb0 {
-            display: none !important;
-        }
-        /* Style untuk caption keterangan di bawah */
+        /* Caption di bawah */
         .sidebar-caption {
             text-align: center;
             color: #AD1457;
