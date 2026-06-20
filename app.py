@@ -1,15 +1,12 @@
-# =====================================================
-# APLIKASI PCA - FILE UTAMA (NAVIGASI & ROUTING)
-# =====================================================
-# File ini bertugas menampilkan navigasi sidebar
-# dan memanggil halaman yang dipilih.
-# =====================================================
-
+# app.py - Main aplikasi
 import streamlit as st
-from halaman import home, grayscale, kompresi, deteksi
+import halaman.home as home
+import halaman.grayscale as grayscale
+import halaman.kompresi as kompresi
+import halaman.deteksi as deteksi
 
 # ==========================================
-# 1. PENGATURAN HALAMAN
+# PENGATURAN HALAMAN & CSS
 # ==========================================
 st.set_page_config(
     page_title="PCA Face App",
@@ -18,28 +15,11 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. SESSION STATE
-# ==========================================
-if "page" not in st.session_state:
-    st.session_state.page = "🏠 Home"
-if "previous_page" not in st.session_state:
-    st.session_state.previous_page = st.session_state.page
-if "show_upload" not in st.session_state:
-    st.session_state.show_upload = True
-
-# Bersihkan session state saat pindah halaman
-if st.session_state.previous_page != st.session_state.page:
-    keys_to_keep = {"page", "previous_page", "show_upload"}
-    for key in list(st.session_state.keys()):
-        if key not in keys_to_keep:
-            del st.session_state[key]
-    st.session_state.previous_page = st.session_state.page
-
-# ==========================================
-# 3. CSS - TEMA PINK + NAVIGASI
+# CSS GLOBAL (TEMA PINK + TOMBOL NAVIGASI)
 # ==========================================
 st.markdown("""
     <style>
+        /* ===== BACKGROUND ===== */
         .stApp, .main, .block-container, section.main, div[data-testid="stSidebar"] {
             background-color: #FFF0F5 !important;
             background-image: none !important;
@@ -84,6 +64,8 @@ st.markdown("""
             color: #AD1457 !important;
             font-weight: bold !important;
         }
+
+        /* ===== TOMBOL UMUM ===== */
         .stButton button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
             color: white !important;
@@ -98,6 +80,8 @@ st.markdown("""
             transform: scale(1.03) translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
         }
+
+        /* ===== FILE UPLOADER ===== */
         div[data-testid="stFileUploader"] {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             border: 2px dashed #EC407A !important;
@@ -126,10 +110,14 @@ st.markdown("""
         div[data-testid="stFileUploader"]:hover {
             border-color: #D81B60 !important;
         }
+
+        /* ===== SLIDER ===== */
         .stSlider > div {
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
+
+        /* ===== BADGE ===== */
         .pink-badge {
             display: block !important;
             width: 100% !important;
@@ -173,6 +161,10 @@ st.markdown("""
         .explanation-box li {
             margin-bottom: 6px !important;
         }
+
+        /* =========================================================
+           ===== NAVIGASI TOMBOL (48px, EMOJI 60px) =====
+           ========================================================= */
         .stSidebar .stButton button {
             width: 48px !important;
             height: 48px !important;
@@ -205,6 +197,7 @@ st.markdown("""
             font-size: 15px;
             padding-top: 5px;
         }
+        
         .sakura-btn-container .stButton button {
             background: transparent !important;
             border: 2px solid #EC407A !important;
@@ -229,7 +222,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 4. NAVIGASI SIDEBAR
+# SESSION STATE (untuk navigasi)
+# ==========================================
+if "page" not in st.session_state:
+    st.session_state.page = "🏠 Home"
+if "show_upload" not in st.session_state:
+    st.session_state.show_upload = True
+
+# ==========================================
+# NAVIGASI SIDEBAR (4 tombol emoji)
 # ==========================================
 st.sidebar.markdown("🌸 **Haloo!!**")
 
@@ -241,7 +242,6 @@ menus = [
 ]
 
 cols = st.sidebar.columns(4)
-
 for col, (emoji, page_name) in zip(cols, menus):
     with col:
         is_active = (st.session_state.page == page_name)
@@ -271,7 +271,7 @@ elif st.session_state.page == "🔍 Deteksi Kemiripan":
     st.sidebar.markdown('<p class="sidebar-caption">🔍 Bandingkan dua wajah</p>', unsafe_allow_html=True)
 
 # ==========================================
-# 5. ROUTING - TAMPILKAN HALAMAN
+# TAMPILKAN HALAMAN SESUAI PILIHAN
 # ==========================================
 page = st.session_state.page
 if page == "🏠 Home":
