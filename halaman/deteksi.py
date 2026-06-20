@@ -7,74 +7,76 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.datasets import fetch_lfw_people
-import warnings
-warnings.filterwarnings("ignore")
 
 def tampilkan():
     # ==========================================
-    # INISIALISASI & LOAD DATASET LFW OTOMATIS
+    # 1. INISIALISASI SESSION STATE (WAJIB DI AWAL)
     # ==========================================
     if "deteksi_initialized" not in st.session_state:
         st.session_state.deteksi_initialized = True
         st.session_state.show_upload = False
-        st.session_state.default_loaded = False
-        st.session_state.X_default = None
-        st.session_state.pca_model = None
+        st.session_state.model_loaded = False   # Apakah model PCA sudah dilatih?
+        st.session_state.pca_model = None       # Menyimpan model PCA
+        st.session_state.X_train = None         # Menyimpan data latih (jika perlu)
 
-    # --- LOAD DATASET LFW (sekali saja) ---
-    if not st.session_state.default_loaded:
-        with st.spinner("⏳ Sedang mengunduh dataset wajah LFW (butuh internet, sekitar 50MB)..."):
+    # ==========================================
+    # 2. LOAD DATA LATIH & LATIH PCA (SEKALI SAJA)
+    # ==========================================
+    if not st.session_state.model_loaded:
+        with st.spinner("⏳ Sedang memuat dataset LFW & melatih PCA... (butuh internet, sekali saja)"):
             try:
                 # Download dataset LFW (Labeled Faces in the Wild)
                 lfw = fetch_lfw_people(
-                    min_faces_per_person=5,
-                    resize=0.4,
-                    color=False,
-                    slice_=(slice(50, 200), slice(50, 200))
+                    min_faces_per_person=5,  # minimal 5 foto per orang
+                    resize=0.4,              # resize ke ukuran kecil
+                    color=False,             # grayscale
+                    slice_=(slice(50, 200), slice(50, 200))  # crop area wajah
                 )
-                # Ambil 2 orang yang memiliki minimal 5 foto
+                
+                # Ambil semua gambar
+                X_all = lfw.images
+                # Ambil minimal 2 orang yang punya >=5 foto
                 unique_labels = np.unique(lfw.target)
-                valid_labels = []
-                for label in unique_labels:
-                    if np.sum(lfw.target == label) >= 5:
-                        valid_labels.append(label)
-                        if len(valid_labels) == 2:
-                            break
-
+                valid_labels = [label for label in unique_labels if np.sum(lfw.target == label) >= 5]
+                
                 if len(valid_labels) < 2:
-                    st.error("Dataset LFW tidak memiliki cukup orang dengan minimal 5 foto.")
+                    st.error("⚠️ Dataset LFW tidak memiliki cukup orang dengan minimal 5 foto.")
                     st.stop()
-
-                # Kumpulkan foto dari 2 orang tersebut (masing-masing 5 foto)
-                X_default = []
-                for label in valid_labels:
+                
+                # Pilih 2 orang pertama (bisa ditambah jika mau)
+                selected_labels = valid_labels[:2]
+                
+                # Kumpulkan foto dari orang-orang terpilih (masing-masing 5 foto)
+                X_train = []
+                for label in selected_labels:
                     idx = np.where(lfw.target == label)[0]
-                    for i in idx[:5]:
+                    for i in idx[:5]:  # ambil 5 foto per orang
                         img = lfw.images[i]
+                        # Resize ke 100x100 agar konsisten
                         img_resized = cv2.resize(img, (100, 100))
-                        X_default.append(img_resized.flatten() / 255.0)
-
-                X_default = np.array(X_default)
-
+                        X_train.append(img_resized.flatten() / 255.0)
+                
+                X_train = np.array(X_train)
+                
                 # Latih PCA
-                k = min(50, len(X_default)-1)
+                k = min(50, len(X_train) - 1)
                 pca = PCA(n_components=k)
-                pca.fit(X_default)
-
+                pca.fit(X_train)
+                
                 # Simpan ke session state
-                st.session_state.X_default = X_default
+                st.session_state.X_train = X_train
                 st.session_state.pca_model = pca
-                st.session_state.default_loaded = True
-
-                st.success(f"✅ Dataset LFW berhasil dimuat! ({len(X_default)} foto dari 2 orang)")
-
+                st.session_state.model_loaded = True
+                
+                st.success(f"✅ Data latih berhasil dimuat! ({len(X_train)} foto dari {len(selected_labels)} orang)")
+                
             except Exception as e:
-                st.error(f"⚠️ Gagal mengunduh dataset LFW: {e}")
-                st.info("💡 Pastikan koneksi internet aktif. Jika gagal, gunakan opsi upload data latih manual di sidebar.")
-                st.session_state.default_loaded = False
+                st.error(f"⚠️ Gagal memuat dataset LFW: {e}")
+                st.info("💡 Pastikan koneksi internet aktif. Jika gagal, upload data latih manual.")
+                st.session_state.model_loaded = False
 
     # ==========================================
-    # SIDEBAR (TETAP SAMA SEPERTI KODE TERAKHIR)
+    # 3. SIDEBAR
     # ==========================================
     with st.sidebar:
         # --- Tombol Sakura ---
@@ -86,7 +88,7 @@ def tampilkan():
         if st.session_state.show_upload:
             st.header("Upload Data Latih Kamu ^^")
             st.markdown("Upload **minimal 10 foto** wajah (2 orang, masing-masing 5+ foto)")
-            st.caption("💡 Ini opsional. Dataset default sudah tersedia dari internet.")
+            st.caption("💡 Ini opsional. Data latih default sudah tersedia dari LFW.")
 
             file_latih = st.file_uploader(
                 "Pilih Foto",
@@ -114,9 +116,9 @@ def tampilkan():
             </p>
             <h5 style="color: #AD1457; margin-top: 10px;">Cara Menggunakannya:</h5>
             <ul style="color: #6A1B4D; font-size: 13px; line-height: 1.8; padding-left: 18px;">
-                <li><b>1.</b> Data latih sudah tersedia otomatis (diunduh dari internet). Kamu tinggal upload dua foto uji di halaman utama.</li>
-                <li><b>2.</b> (Opsional) Klik <b>"🌸"</b> di atas jika ingin mengganti data latih dengan upload manual.</li>
-                <li><b>3.</b> Atur threshold sesuai keinginan.</li>
+                <li><b>1.</b> Data latih otomatis dimuat dari dataset LFW! Tinggal upload dua foto uji.</li>
+                <li><b>2.</b> (Opsional) Klik <b>"🌸"</b> di atas untuk upload data latih sendiri.</li>
+                <li><b>3.</b> Atur threshold. Ini opsional, kaya KKM gitu, mau naruh dimana batas 'mirip'.</li>
                 <li><b>4.</b> Klik <b>"Proses Deteksi"</b> untuk melihat hasil.</li>
             </ul>
             <p style="color: #6A1B4D; font-size: 12px; margin-top: 8px; background: #FCE4EC; padding: 6px 12px; border-radius: 6px;">
@@ -126,7 +128,7 @@ def tampilkan():
         """, unsafe_allow_html=True)
 
     # ==========================================
-    # AREA UTAMA: UPLOAD 2 FOTO UJI
+    # 4. AREA UTAMA: UPLOAD 2 FOTO UJI
     # ==========================================
     st.markdown("<h2 style='text-align: center; color: #AD1457; margin-bottom: 50px;'>🔍 Upload Dua Wajah untuk Dibandingkan</h2>", unsafe_allow_html=True)
 
@@ -139,7 +141,7 @@ def tampilkan():
         file2 = st.file_uploader("Upload Foto 2", type=["jpg","jpeg","png"], key="f2_deteksi", label_visibility="collapsed")
 
     # ==========================================
-    # AMBANG BATAS
+    # 5. AMBANG BATAS (threshold)
     # ==========================================
     if "threshold_deteksi" in st.session_state:
         ambang = st.session_state.threshold_deteksi
@@ -147,26 +149,13 @@ def tampilkan():
         ambang = 0.70
 
     # ==========================================
-    # TOMBOL PROSES
+    # 6. TOMBOL PROSES
     # ==========================================
     if st.button("🚀 Proses Deteksi Sekarang", use_container_width=True):
-        # --- Cek ketersediaan data latih ---
-        # Prioritas: upload manual (jika ada) > data bawaan (LFW)
-        if 'file_latih' in locals() and file_latih and len(file_latih) >= 10:
-            # Gunakan upload manual
-            use_default = False
-            train_files = file_latih
-        elif st.session_state.default_loaded:
-            # Gunakan data bawaan
-            use_default = True
-            X_default = st.session_state.X_default
-            pca = st.session_state.pca_model
-        else:
-            st.error("⚠️ **Data Latih Belum Tersedia!** Pastikan koneksi internet aktif untuk mengunduh dataset LFW, atau upload data latih manual.")
+        # --- Cek data latih ---
+        if not st.session_state.model_loaded:
+            st.error("⚠️ **Model PCA belum siap!** Pastikan koneksi internet aktif.")
             st.stop()
-
-        if not use_default and (not train_files or len(train_files) < 10):
-            st.error("⚠️ **Data Latih Kurang!** Upload minimal 10 foto (2 orang, masing-masing 5+ foto).")
         elif not file1 or not file2:
             st.error("⚠️ Upload kedua foto uji!")
         else:
@@ -210,28 +199,10 @@ def tampilkan():
                         resize = cv2.resize(img, ukuran)
                         return cv2.cvtColor(resize, cv2.COLOR_BGR2RGB)
 
-                # ----- PROSES DATA LATIH -----
-                UKURAN = (100, 100)
-                if use_default:
-                    X_latih = X_default
-                    # PCA sudah dilatih di atas
-                    st.info(f"📊 Menggunakan dataset LFW ({len(X_latih)} foto dari 2 orang)")
-                else:
-                    # Proses upload manual
-                    X_latih = []
-                    progress = st.progress(0, text="Mengolah data latih...")
-                    for i, file in enumerate(train_files):
-                        vektor, _ = praproses(file.getvalue(), UKURAN)
-                        X_latih.append(vektor)
-                        progress.progress((i+1)/len(train_files))
-                    X_latih = np.array(X_latih)
-                    # Latih PCA untuk upload manual
-                    k = min(50, len(X_latih)-1) if len(X_latih)>1 else 1
-                    pca = PCA(n_components=k)
-                    pca.fit(X_latih)
-
                 # ----- PROSES FOTO UJI -----
-                progress = st.progress(70, text="Memproses foto uji...")
+                UKURAN = (100, 100)
+                pca = st.session_state.pca_model
+
                 v1, _ = praproses(file1.getvalue(), UKURAN)
                 v2, _ = praproses(file2.getvalue(), UKURAN)
                 img1_warna = muat_warna(file1.getvalue(), UKURAN)
@@ -240,7 +211,6 @@ def tampilkan():
                 proj1 = pca.transform([v1])
                 proj2 = pca.transform([v2])
                 kemiripan = cosine_similarity(proj1, proj2)[0][0]
-                progress.empty()
 
                 # ----- TAMPILKAN HASIL -----
                 st.subheader("Hasil Deteksi Foto Kamu ^^")
@@ -270,42 +240,40 @@ def tampilkan():
                     st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
                     st.markdown('</div>', unsafe_allow_html=True)
 
-            # ==========================================
-            # GRAFIK + PENJELASAN
-            # ==========================================
-            st.markdown("---")
-            kolom_graf, kolom_exp = st.columns([1, 1])
-            
-            with kolom_graf:
-                st.subheader("Grafik Akumulasi Informasi")
-                varians = np.cumsum(pca.explained_variance_ratio_)
-                fig, ax = plt.subplots(figsize=(5, 3.5))
-                ax.plot(range(1, len(varians)+1), varians, 'bo-', linewidth=2, markersize=5)
-                ax.axhline(y=0.95, color='red', linestyle='--', linewidth=2, label='95% Varians')
-                ax.axhline(y=ambang, color='green', linestyle=':', linewidth=2, label=f'Threshold {ambang:.2f}')
-                ax.set_xlabel('Jumlah Komponen PCA (k)', fontsize=10)
-                ax.set_ylabel('Akumulasi Informasi', fontsize=10)
-                ax.set_title('Kurva Akumulasi Informasi PCA', fontsize=11)
-                ax.grid(True, alpha=0.3)
-                ax.legend(loc='lower right', fontsize=8)
-                ax.set_ylim(0, 1.05)
-                st.pyplot(fig)
-            
-            with kolom_exp:
-                st.subheader("Penjelasan Grafik!!")
-                st.markdown("""
-                <div class="explanation-box">
-                Grafik ini menunjukkan seberapa banyak <b>informasi wajah</b> yang bisa dipertahankan jika kita menggunakan sejumlah komponen PCA (k).
+                # ----- GRAFIK + PENJELASAN -----
+                st.markdown("---")
+                kolom_graf, kolom_exp = st.columns([1, 1])
                 
-                <br><br>
+                with kolom_graf:
+                    st.subheader("Grafik Akumulasi Informasi")
+                    varians = np.cumsum(pca.explained_variance_ratio_)
+                    fig, ax = plt.subplots(figsize=(5, 3.5))
+                    ax.plot(range(1, len(varians)+1), varians, 'bo-', linewidth=2, markersize=5)
+                    ax.axhline(y=0.95, color='red', linestyle='--', linewidth=2, label='95% Varians')
+                    ax.axhline(y=ambang, color='green', linestyle=':', linewidth=2, label=f'Threshold {ambang:.2f}')
+                    ax.set_xlabel('Jumlah Komponen PCA (k)', fontsize=10)
+                    ax.set_ylabel('Akumulasi Informasi', fontsize=10)
+                    ax.set_title('Kurva Akumulasi Informasi PCA', fontsize=11)
+                    ax.grid(True, alpha=0.3)
+                    ax.legend(loc='lower right', fontsize=8)
+                    ax.set_ylim(0, 1.05)
+                    st.pyplot(fig)
                 
-                <b>🔵 Garis biru</b> → kurva akumulasi varians. Semakin tinggi, semakin baik.<br>
-                <b>🔴 Garis merah putus-putus</b> → 95% varians data sudah terwakili.<br>
-                <b>🟢 Garis hijau titik-titik</b> → <b>Threshold</b> (batas kemiripan) yang kamu atur di sidebar.
-                
-                <br><br>
-                
-                <b>💡 Cara baca:</b><br>
-                Dari 10.000 pixel wajah, PCA bisa meringkasnya menjadi 50 angka saja tanpa kehilangan banyak informasi. Semakin tinggi garis biru, semakin baik representasi wajahnya.
-                </div>
-                """, unsafe_allow_html=True)
+                with kolom_exp:
+                    st.subheader("Penjelasan Grafik!!")
+                    st.markdown("""
+                    <div class="explanation-box">
+                    Grafik ini menunjukkan seberapa banyak <b>informasi wajah</b> yang bisa dipertahankan jika kita menggunakan sejumlah komponen PCA (k).
+                    
+                    <br><br>
+                    
+                    <b>🔵 Garis biru</b> → kurva akumulasi varians. Semakin tinggi, semakin baik.<br>
+                    <b>🔴 Garis merah putus-putus</b> → 95% varians data sudah terwakili.<br>
+                    <b>🟢 Garis hijau titik-titik</b> → <b>Threshold</b> (batas kemiripan) yang kamu atur di sidebar.
+                    
+                    <br><br>
+                    
+                    <b>💡 Cara baca:</b><br>
+                    Dari 10.000 pixel wajah, PCA bisa meringkasnya menjadi 50 angka saja tanpa kehilangan banyak informasi. Semakin tinggi garis biru, semakin baik representasi wajahnya.
+                    </div>
+                    """, unsafe_allow_html=True)
