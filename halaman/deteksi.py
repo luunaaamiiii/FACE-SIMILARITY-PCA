@@ -12,16 +12,14 @@ def tampilkan():
     # SIDEBAR: UPLOAD DATA LATIH + THRESHOLD
     # ==========================================
     with st.sidebar:
-        # --- Tombol Sakura (di tengah) ---
-        st.markdown('<div style="margin-top: 5px;">', unsafe_allow_html=True)
-        kol1, kol2, kol3 = st.columns([1, 2, 1])
-        with kol2:
-            if st.button("🌸", key="toggle_sidebar_deteksi"):
-                st.session_state.show_upload = not st.session_state.show_upload
-                st.rerun()
+        # --- Tombol Sakura (center dengan flexbox) ---
+        st.markdown('<div style="display: flex; justify-content: center; margin-top: 5px;">', unsafe_allow_html=True)
+        if st.button("🌸", key="toggle_sidebar_deteksi"):
+            st.session_state.show_upload = not st.session_state.show_upload
+            st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # --- BLOK YANG MUNCUL/HILANG ---
+        # --- BLOK YANG MUNCUL/HILANG BERSAMAAN ---
         if st.session_state.show_upload:
             st.header("📂 Upload Data Latih")
             st.markdown("Upload **minimal 10 foto** wajah (2 orang, masing-masing 5+ foto)")
