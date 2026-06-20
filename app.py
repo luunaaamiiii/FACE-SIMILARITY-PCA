@@ -218,29 +218,74 @@ st.markdown("""
             background: rgba(236, 64, 122, 0.2) !important;
             box-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
-       /* =========================================================
-   ===== TOMBOL FULLSCREEN PADA GAMBAR =====
+   /* =========================================================
+   ===== PERBAIKAN TOMBOL FULLSCREEN =====
    ========================================================= */
+
+/* Target semua tombol di dalam container gambar */
+[data-testid="stImage"] button,
 .stImage button,
+div[data-testid="stImage"] button {
+    color: #FFFFFF !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    font-size: 14px !important;
+    font-weight: bold !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+    z-index: 999 !important;
+}
+
+/* Target teks di dalam tombol */
+[data-testid="stImage"] button *,
+.stImage button *,
+div[data-testid="stImage"] button * {
+    color: #FFFFFF !important;
+}
+
+/* Target ikon SVG (panah fullscreen) */
+[data-testid="stImage"] button svg,
+.stImage button svg,
+div[data-testid="stImage"] button svg {
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
+}
+
+/* Hover */
+[data-testid="stImage"] button:hover,
+.stImage button:hover {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.7) !important;
+    transform: scale(1.05) !important;
+}
+
+/* Target khusus untuk tombol fullscreen di mode light/dark */
 button[data-testid="stImageFullScreenButton"] {
     color: #FFFFFF !important;
-    background: rgba(0, 0, 0, 0.4) !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
     border-radius: 8px !important;
-    padding: 4px 10px !important;
+    padding: 6px 14px !important;
     font-size: 14px !important;
-    border: none !important;
-    cursor: pointer !important;
-    transition: 0.3s !important;
+    font-weight: bold !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
-.stImage button svg,
 button[data-testid="stImageFullScreenButton"] svg {
     fill: #FFFFFF !important;
     stroke: #FFFFFF !important;
 }
-.stImage button:hover,
 button[data-testid="stImageFullScreenButton"]:hover {
-    background: rgba(0, 0, 0, 0.6) !important;
+    background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Fallback: target semua button di dalam elemen gambar */
+div[data-testid="stImage"] button,
+div[data-testid="stImage"] button span,
+div[data-testid="stImage"] button svg {
     color: #FFFFFF !important;
+    fill: #FFFFFF !important;
+    stroke: #FFFFFF !important;
 }
     </style>
 """, unsafe_allow_html=True)
