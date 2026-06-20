@@ -1,24 +1,11 @@
-# =====================================================
-# HALAMAN KOMPRESI - KOMPRESI GAMBAR DENGAN PCA
-# =====================================================
-# Dikerjakan oleh: [Nama Anggota 3]
-# =====================================================
-
+# halaman/kompresi.py - Kompresi Gambar dengan PCA
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import cv2
-
-# ==========================================
-# IMPOR SKIMAGE (jika ada)
-# ==========================================
-try:
-    from skimage.metrics import structural_similarity as ssim
-    from skimage.metrics import peak_signal_noise_ratio as psnr
-    SKIMAGE_AVAILABLE = True
-except ImportError:
-    SKIMAGE_AVAILABLE = False
+from skimage.metrics import structural_similarity as ssim
+from skimage.metrics import peak_signal_noise_ratio as psnr
 
 def tampilkan():
     st.markdown('<h1 class="main-title">🗜️ Kompresi Gambar dengan PCA</h1>', unsafe_allow_html=True)
@@ -52,12 +39,8 @@ def tampilkan():
         rekon = np.clip(rekon, 0, 255).astype(np.uint8)
         
         img_uint8 = img_np.astype(np.uint8)
-        if SKIMAGE_AVAILABLE:
-            ssim_val = ssim(img_uint8, rekon, data_range=255)
-            psnr_val = psnr(img_uint8, rekon, data_range=255)
-        else:
-            ssim_val = "Tidak tersedia"
-            psnr_val = "Tidak tersedia"
+        ssim_val = ssim(img_uint8, rekon, data_range=255)
+        psnr_val = psnr(img_uint8, rekon, data_range=255)
         
         original_size = h * w
         compressed_size = h * k + w * k
@@ -72,8 +55,8 @@ def tampilkan():
         
         st.markdown("### 📊 Metrik Kualitas")
         c1, c2, c3 = st.columns(3)
-        c1.metric("SSIM", f"{ssim_val:.4f}" if isinstance(ssim_val, float) else ssim_val)
-        c2.metric("PSNR", f"{psnr_val:.2f} dB" if isinstance(psnr_val, float) else psnr_val)
+        c1.metric("SSIM", f"{ssim_val:.4f}")
+        c2.metric("PSNR", f"{psnr_val:.2f} dB")
         c3.metric("Penghematan", f"{saving:.1f}%")
         
         st.markdown(f"""
