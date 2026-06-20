@@ -191,42 +191,42 @@ def tampilkan():
                     st.caption(f"Varians: {np.sum(pca.explained_variance_ratio_)*100:.1f}%")
                     st.markdown('</div>', unsafe_allow_html=True)
 
-                # ==========================================
-                # 10. GRAFIK + PENJELASAN (DARI KODE GAMBAR 2)
-                # ==========================================
-                st.markdown("---")
-                kolom_graf, kolom_exp = st.columns([1, 1])
+            # ==========================================
+            # 10. GRAFIK + PENJELASAN
+            # ==========================================
+            st.markdown("---")
+            kolom_graf, kolom_exp = st.columns([1, 1])
+            
+            with kolom_graf:
+                st.subheader("📈 Grafik Akumulasi Informasi")
+                varians = np.cumsum(pca.explained_variance_ratio_)
+                fig, ax = plt.subplots(figsize=(5, 3.5))
+                ax.plot(range(1, len(varians)+1), varians, 'bo-', linewidth=2, markersize=5)
+                ax.axhline(y=0.95, color='red', linestyle='--', linewidth=2, label='95% Varians')
+                ax.axhline(y=ambang, color='green', linestyle=':', linewidth=2, label=f'Threshold {ambang:.2f}')
+                ax.set_xlabel('Jumlah Komponen PCA (k)', fontsize=10)
+                ax.set_ylabel('Akumulasi Informasi', fontsize=10)
+                ax.set_title('Kurva Akumulasi Informasi PCA', fontsize=11)
+                ax.grid(True, alpha=0.3)
+                ax.legend(loc='lower right', fontsize=8)
+                ax.set_ylim(0, 1.05)
+                st.pyplot(fig)
+            
+            with kolom_exp:
+                st.subheader("📖 Penjelasan Grafik")
+                st.markdown("""
+                <div class="explanation-box">
+                Grafik ini menunjukkan seberapa banyak <b>informasi wajah</b> yang bisa dipertahankan jika kita menggunakan sejumlah komponen PCA (k).
                 
-                with kolom_graf:
-                    st.subheader("📈 Grafik Akumulasi Informasi")
-                    varians = np.cumsum(pca.explained_variance_ratio_)
-                    fig, ax = plt.subplots(figsize=(5, 3.5))
-                    ax.plot(range(1, len(varians)+1), varians, 'bo-', linewidth=2, markersize=5)
-                    ax.axhline(y=0.95, color='red', linestyle='--', linewidth=2, label='95% Varians')
-                    ax.axhline(y=ambang, color='green', linestyle=':', linewidth=2, label=f'Threshold {ambang:.2f}')
-                    ax.set_xlabel('Jumlah Komponen PCA (k)', fontsize=10)
-                    ax.set_ylabel('Akumulasi Informasi', fontsize=10)
-                    ax.set_title('Kurva Akumulasi Informasi PCA', fontsize=11)
-                    ax.grid(True, alpha=0.3)
-                    ax.legend(loc='lower right', fontsize=8)
-                    ax.set_ylim(0, 1.05)
-                    st.pyplot(fig)
+                <br><br>
                 
-                with kolom_exp:
-                    st.subheader("📖 Penjelasan Grafik")
-                    st.markdown("""
-                    <div class="explanation-box">
-                    Grafik ini menunjukkan seberapa banyak <b>informasi wajah</b> yang bisa dipertahankan jika kita menggunakan sejumlah komponen PCA (k).
-                    
-                    <br><br>
-                    
-                    <b>🔵 Garis biru</b> → kurva akumulasi varians. Semakin tinggi, semakin baik.<br>
-                    <b>🔴 Garis merah putus-putus</b> → 95% varians data sudah terwakili.<br>
-                    <b>🟢 Garis hijau titik-titik</b> → <b>Threshold</b> (batas kemiripan) yang kamu atur di sidebar.
-                    
-                    <br><br>
-                    
-                    <b>💡 Cara baca:</b><br>
-                    Dari 10.000 pixel wajah, PCA bisa meringkasnya menjadi 50 angka saja tanpa kehilangan banyak informasi. Semakin tinggi garis biru, semakin baik representasi wajahnya.
-                    </div>
-                    """, unsafe_allow_html=True)
+                <b>🔵 Garis biru</b> → kurva akumulasi varians. Semakin tinggi, semakin baik.<br>
+                <b>🔴 Garis merah putus-putus</b> → 95% varians data sudah terwakili.<br>
+                <b>🟢 Garis hijau titik-titik</b> → <b>Threshold</b> (batas kemiripan) yang kamu atur di sidebar.
+                
+                <br><br>
+                
+                <b>💡 Cara baca:</b><br>
+                Dari 10.000 pixel wajah, PCA bisa meringkasnya menjadi 50 angka saja tanpa kehilangan banyak informasi. Semakin tinggi garis biru, semakin baik representasi wajahnya.
+                </div>
+                """, unsafe_allow_html=True)
