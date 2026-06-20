@@ -182,12 +182,12 @@ st.markdown("""
             padding: 0 !important;
             margin: 0 auto !important;
             box-shadow: none !important;
-            transition: all 0.3s ease !important;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
             line-height: 1 !important;
         }
         .stSidebar .stButton button:hover {
-            transform: scale(1.05) !important;
-            background: rgba(236, 64, 122, 0.1) !important;
+            transform: scale(1.08) !important;
+            background: rgba(236, 64, 122, 0.08) !important;
             box-shadow: none !important;
         }
         .sidebar-caption {
@@ -245,14 +245,16 @@ cols = st.sidebar.columns(4)
 for col, (emoji, page_name) in zip(cols, menus):
     with col:
         is_active = (st.session_state.page == page_name)
+        # Tandai tombol aktif dengan CSS
         if is_active:
             st.markdown(f"""
                 <style>
                     .stSidebar .stButton button[data-testid="baseButton-secondary"]:has(> div:contains("{emoji}")) {{
-                        background: #F8BBD0 !important;
-                        transform: translateY(4px) scale(1.02) !important;
-                        box-shadow: 0 4px 12px rgba(236,64,122,0.3) !important;
+                        background: #FFD9E6 !important;  /* pink soft/muda seperti foto 2 */
+                        transform: translateY(3px) scale(1.04) !important;
+                        box-shadow: 0 4px 16px rgba(236,64,122,0.25) !important;
                         border: none !important;
+                        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
                     }}
                 </style>
             """, unsafe_allow_html=True)
