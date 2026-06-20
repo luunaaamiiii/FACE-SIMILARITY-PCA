@@ -12,12 +12,10 @@ def tampilkan():
     # SIDEBAR: UPLOAD DATA LATIH + THRESHOLD
     # ==========================================
     with st.sidebar:
-        # --- Tombol Sakura (center dengan columns) ---
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            if st.button("🌸", key="toggle_sidebar_deteksi", use_container_width=False):
-                st.session_state.show_upload = not st.session_state.show_upload
-                st.rerun()
+        # --- Tombol Sakura (kiri, default) ---
+        if st.button("🌸", key="toggle_sidebar_deteksi", use_container_width=False):
+            st.session_state.show_upload = not st.session_state.show_upload
+            st.rerun()
 
         # --- BLOK YANG MUNCUL/HILANG BERSAMAAN ---
         if st.session_state.show_upload:
