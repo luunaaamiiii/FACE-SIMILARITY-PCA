@@ -163,7 +163,7 @@ st.markdown("""
         }
 
         /* =========================================================
-           ===== NAVIGASI TOMBOL (48px, EMOJI 60px) =====
+           ===== NAVIGASI TOMBOL =====
            ========================================================= */
         .stSidebar .stButton button {
             width: 48px !important;
@@ -245,19 +245,31 @@ cols = st.sidebar.columns(4)
 for col, (emoji, page_name) in zip(cols, menus):
     with col:
         is_active = (st.session_state.page == page_name)
-        # Tandai tombol aktif dengan CSS
+        # Tombol aktif dengan CSS yang PASTI kena
         if is_active:
             st.markdown(f"""
                 <style>
-                    .stSidebar .stButton button[data-testid="baseButton-secondary"]:has(> div:contains("{emoji}")) {{
-                        background: #F8BBD0 !important;  /* pink tua seperti foto 2 */
+                    /* TARGET LEBIH SPESIFIK */
+                    .stSidebar .stButton button {{
+                        background: #F8BBD0 !important;
                         transform: translateY(2px) scale(1.03) !important;
-                        box-shadow: 0 4px 14px rgba(236,64,122,0.2) !important;
+                        box-shadow: 0 4px 14px rgba(236,64,122,0.25) !important;
                         border: none !important;
-                        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+                    }}
+                    /* TARGET LANGSUNG DENGAN DATA-TESTID */
+                    button[data-testid="baseButton-secondary"] {{
+                        background: #F8BBD0 !important;
+                        transform: translateY(2px) scale(1.03) !important;
+                        box-shadow: 0 4px 14px rgba(236,64,122,0.25) !important;
+                        border: none !important;
+                    }}
+                    /* TARGET DENGAN KELAS EMOSI */
+                    .st-emotion-cache-1v0mbdj {{
+                        background: #F8BBD0 !important;
                     }}
                 </style>
             """, unsafe_allow_html=True)
+        # Tombol navigasi
         if st.button(emoji, key=f"nav_{emoji}", use_container_width=True):
             st.session_state.page = page_name
             st.rerun()
