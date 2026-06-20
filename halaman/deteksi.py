@@ -72,7 +72,7 @@ def tampilkan():
     """, unsafe_allow_html=True)
 
     # ===== AREA UTAMA: UPLOAD 2 FOTO UJI =====
-    st.markdown("## 🔍 Upload Dua Wajah untuk Dibandingkan")
+    st.markdown("<h2 style='text-align: center; color: #AD1457;'>🔍 Upload Dua Wajah untuk Dibandingkan</h2>", unsafe_allow_html=True)
     kolom1, kolom2 = st.columns(2)
     with kolom1:
         st.markdown("### 📸 Foto Pertama")
