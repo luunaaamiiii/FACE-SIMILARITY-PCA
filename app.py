@@ -254,7 +254,7 @@ elif st.session_state.page == "🌫️ Grayscale":
 elif st.session_state.page == "🗜️ Kompresi":
     st.sidebar.markdown('<p class="sidebar-caption">🗜️ Kompresi dengan PCA</p>', unsafe_allow_html=True)
 elif st.session_state.page == "🔍 Deteksi Kemiripan":
-
+    pass
 page = st.session_state.page
 
 if page == "🏠 Home":
