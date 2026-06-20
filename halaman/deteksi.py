@@ -164,7 +164,6 @@ def tampilkan():
                 progress.empty()
 
                 # ----- TAMPILKAN HASIL -----
-                st.markdown("---")
                 st.subheader("📊 Hasil Deteksi")
                 kolom_r1, kolom_r2, kolom_r3 = st.columns([2, 2, 1.5])
                 with kolom_r1:
@@ -193,34 +192,8 @@ def tampilkan():
                     st.markdown('</div>', unsafe_allow_html=True)
 
                 # ==========================================
-                # GRAFIK + PENJELASAN (SEJAJAR)
+                # GRAFIK + PENJELASAN (SEJAJAR, TANPA GARIS)
                 # ==========================================
-                st.markdown("---")
-                
-                # CSS agar kedua kolom sejajar
-                st.markdown("""
-                    <style>
-                        .graf-container {
-                            display: flex;
-                            align-items: stretch;
-                            gap: 20px;
-                            margin-top: 10px;
-                        }
-                        .graf-item {
-                            flex: 1;
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                        }
-                        .graf-item:first-child {
-                            align-items: center;
-                        }
-                        .graf-item:last-child {
-                            align-items: flex-start;
-                        }
-                    </style>
-                """, unsafe_allow_html=True)
-
                 col_graf, col_exp = st.columns([1, 1], gap="medium")
                 
                 with col_graf:
