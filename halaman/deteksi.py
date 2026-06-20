@@ -63,7 +63,8 @@ def tampilkan():
     # ==========================================
     # AREA UTAMA: UPLOAD 2 FOTO UJI
     # ==========================================
-    st.markdown("<h2 style='text-align: center; color: #AD1457;'>🔍 Upload Dua Wajah untuk Dibandingkan</h2>", unsafe_allow_html=True)
+    # Judul dengan jarak bawah 30px agar tidak rapat
+    st.markdown("<h2 style='text-align: center; color: #AD1457; margin-bottom: 30px;'>🔍 Upload Dua Wajah untuk Dibandingkan</h2>", unsafe_allow_html=True)
 
     kolom1, kolom2 = st.columns(2)
     with kolom1:
