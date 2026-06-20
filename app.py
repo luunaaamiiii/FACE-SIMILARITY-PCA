@@ -1,35 +1,15 @@
-# =====================================================
-# APLIKASI PCA - MAIN (app.py)
-# =====================================================
-# Fungsi: Mengatur navigasi dan menampilkan halaman
-#          berdasarkan pilihan di sidebar.
-# =====================================================
-
-# ==========================================
-# 1. IMPORT LIBRARY
-# ==========================================
 import streamlit as st
-
-# Import halaman-halaman dari folder 'halaman/'
 import halaman.home as home
 import halaman.grayscale as grayscale
 import halaman.kompresi as kompresi
 import halaman.deteksi as deteksi
 
-# ==========================================
-# 2. PENGATURAN HALAMAN UTAMA
-# ==========================================
-# Konfigurasi dasar aplikasi: judul, icon, layout
 st.set_page_config(
-    page_title="PCA Face App",   # Judul di tab browser
-    page_icon="🌸",              # Icon di tab browser
-    layout="wide"                # Layout full width
+    page_title="LANG APP",
+    page_icon="🌸",
+    layout="wide"
 )
 
-# ==========================================
-# 3. CSS GLOBAL (TAMPILAN & TEMA)
-# ==========================================
-# Semua gaya CSS diterapkan ke seluruh halaman
 st.markdown("""
     <style>
         /* ----- BACKGROUND UTAMA ----- */
@@ -43,7 +23,7 @@ st.markdown("""
             color: #6A1B4D !important;  /* Pink tua */
         }
 
-        /* ----- HEADER (BAR ATAS) ----- */
+        /* ----- HEADER ----- */
         header {
             background: linear-gradient(135deg, #880E4F, #AD1457) !important;
             border-bottom: 2px solid #F8BBD0 !important;
@@ -131,13 +111,13 @@ st.markdown("""
             border-color: #D81B60 !important;
         }
 
-        /* ----- SLIDER (Threshold, komponen k) ----- */
+        /* ----- SLIDER ----- */
         .stSlider > div {
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
 
-        /* ----- BADGE (Label Foto Pertama, Kedua, Skor) ----- */
+        /* ----- BADGE ----- */
         .pink-badge {
             display: block !important;
             width: 100% !important;
@@ -153,7 +133,7 @@ st.markdown("""
             margin-bottom: 12px !important;
         }
 
-        /* ----- KOTAK HASIL (Card) ----- */
+        /* ----- KOTAK HASIL ----- */
         .result-card {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             padding: 20px !important;
@@ -183,10 +163,7 @@ st.markdown("""
             margin-bottom: 6px !important;
         }
 
-        /* =========================================================
-           ===== NAVIGASI SIDEBAR (4 TOMBOL EMOJI) =====
-           ========================================================= */
-        /* Ukuran tombol & emoji */
+        /* ----- button 4 ----- */
         .stSidebar .stButton button {
             width: 48px !important;
             height: 48px !important;
@@ -197,7 +174,7 @@ st.markdown("""
             border-radius: 50% !important;
             border: none !important;
             background: transparent !important;
-            font-size: 60px !important;          /* Emoji besar */
+            font-size: 60px !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -222,37 +199,8 @@ st.markdown("""
             font-size: 15px;
             padding-top: 5px;
         }
-
-        /* Tombol sakura untuk toggle upload (di halaman deteksi) */
-        .sakura-btn-container .stButton button {
-            background: transparent !important;
-            border: 2px solid #EC407A !important;
-            border-radius: 50% !important;
-            font-size: 32px !important;
-            padding: 8px 14px !important;
-            color: #EC407A !important;
-            width: 55px !important;
-            height: 55px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            margin: 0 auto !important;
-            transition: 0.3s !important;
-        }
-        .sakura-btn-container .stButton button:hover {
-            transform: scale(1.1) rotate(15deg) !important;
-            background: rgba(236, 64, 122, 0.2) !important;
-            box-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
-        }
     </style>
 """, unsafe_allow_html=True)
-
-
-# ==========================================
-# 4. SESSION STATE (Penyimpanan Sementara)
-# ==========================================
-# Session state digunakan untuk menyimpan data antar interaksi
-# tanpa harus reload seluruh aplikasi.
 
 # `page` = halaman yang sedang aktif (default: Home)
 if "page" not in st.session_state:
@@ -262,16 +210,8 @@ if "page" not in st.session_state:
 if "show_upload" not in st.session_state:
     st.session_state.show_upload = True
 
-
-# ==========================================
-# 5. NAVIGASI SIDEBAR
-# ==========================================
-# Sidebar selalu tampil di setiap halaman.
-# Terdiri dari: judul "Haloo!!", 4 tombol emoji, dan keterangan.
-
+#NAVIGASI SIDEBAR
 st.sidebar.markdown("🌸 **Haloo!!**")
-
-# Daftar menu: (emoji, nama_halaman)
 menus = [
     ("🏠", "🏠 Home"),
     ("🌫️", "🌫️ Grayscale"),
@@ -286,24 +226,10 @@ for col, (emoji, page_name) in zip(cols, menus):
     with col:
         is_active = (st.session_state.page == page_name)
 
-        # Jika tombol aktif, tambahkan CSS untuk memberi efek
-        if is_active:
-            st.markdown(f"""
-                <style>
-                    /* Target tombol yang sedang aktif */
-                    .stSidebar .stButton button[data-testid="baseButton-secondary"]:has(> div:contains("{emoji}")) {{
-                        background: #F8BBD0 !important;           /* Pink tua */
-                        transform: translateY(2px) scale(1.03) !important;
-                        box-shadow: 0 4px 14px rgba(236,64,122,0.25) !important;
-                        border: none !important;
-                    }}
-                </style>
-            """, unsafe_allow_html=True)
-
         # Tombol navigasi
         if st.button(emoji, key=f"nav_{emoji}", use_container_width=True):
             st.session_state.page = page_name
-            st.rerun()  # Refresh halaman agar perubahan langsung terlihat
+            st.rerun()
 
 
 # --- Keterangan fitur di bawah emoji ---
@@ -316,12 +242,6 @@ elif st.session_state.page == "🗜️ Kompresi":
     st.sidebar.markdown('<p class="sidebar-caption">🗜️ Kompresi dengan PCA</p>', unsafe_allow_html=True)
 elif st.session_state.page == "🔍 Deteksi Kemiripan":
     st.sidebar.markdown('<p class="sidebar-caption">🔍 Bandingkan dua wajah</p>', unsafe_allow_html=True)
-
-
-# ==========================================
-# 6. TAMPILKAN HALAMAN SESUAI PILIHAN
-# ==========================================
-# Memanggil fungsi `tampilkan()` dari masing-masing file halaman.
 
 page = st.session_state.page
 
