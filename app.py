@@ -218,6 +218,25 @@ st.markdown("""
             background: rgba(236, 64, 122, 0.2) !important;
             box-shadow: 0 0 20px rgba(236, 64, 122, 0.3) !important;
         }
+        /* =========================================================
+   ===== PERBAIKAN TOMBOL FULLSCREEN (agar terlihat) =====
+   ========================================================= */
+.stImageFullscreenButton {
+    color: #FFFFFF !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    border-radius: 8px !important;
+    padding: 4px 12px !important;
+    font-size: 14px !important;
+}
+.stImageFullscreenButton svg {
+    fill: #FFFFFF !important;
+}
+.stImageFullscreenButton:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+.stImageFullscreenButton span {
+    color: #FFFFFF !important;
+}
     </style>
 """, unsafe_allow_html=True)
 
