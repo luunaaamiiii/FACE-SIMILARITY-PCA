@@ -8,12 +8,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.datasets import fetch_lfw_people
 
 def tampilkan():
-    if "deteksi_initialized" not in st.session_state:
-        st.session_state.deteksi_initialized = True
-        st.session_state.show_upload = False
+    if "model_loaded" not in st.session_state:
         st.session_state.model_loaded = False
         st.session_state.pca_model = None
         st.session_state.X_train = None
+        st.session_state.show_upload = False
+        st.session_state.deteksi_initialized = True
 #load sama download data
     if not st.session_state.model_loaded:
         with st.spinner("⏳ Sedang memuat dataset LFW & melatih PCA... Tunggu sebentar yaa!! ^^"):
