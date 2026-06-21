@@ -1,13 +1,12 @@
 import streamlit as st
-from PIL import Image, ImageDraw
-import io
+import halaman.home as home
+import halaman.grayscale as grayscale
+import halaman.kompresi as kompresi
+import halaman.deteksi as deteksi
 import base64
-import numpy as np
 import os
 import requests
 from urllib.parse import urlparse
-from sklearn.decomposition import PCA
-from sklearn.metrics.pairwise import cosine_similarity
 
 # ======================== KONFIGURASI HALAMAN ========================
 st.set_page_config(
@@ -16,7 +15,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ======================== CSS GLOBAL ========================
+# ======================== CSS GLOBAL (sama persis dengan kode asli) ========================
 st.markdown("""
     <style>
         /* ----- BACKGROUND & WARNA DASAR ----- */
@@ -409,32 +408,6 @@ st.markdown("""
             0% { transform: scale(1); opacity: 0.7; }
             100% { transform: scale(1.1); opacity: 1; }
         }
-
-        /* ----- GAYA KHUSUS HASIL DETEKSI ----- */
-        .result-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(173,20,87,0.1);
-            border: 2px solid #EC407A;
-            margin-top: 1.5rem;
-            text-align: center;
-        }
-        .result-card .score {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #AD1457;
-        }
-        .result-card .label {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #D81B60;
-        }
-        .result-card .detail {
-            font-size: 1rem;
-            color: #6A1B4D;
-            margin-top: 0.5rem;
-        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -450,7 +423,7 @@ if "kompresi_visited" not in st.session_state:
 if "deteksi_visited" not in st.session_state:
     st.session_state.deteksi_visited = False
 
-# ======================== FUNGSI BANTU UNTUK FOTO ========================
+# ======================== FUNGSI BANTU UNTUK FOTO (untuk sidebar) ========================
 def get_image_base64(path_or_url):
     try:
         parsed = urlparse(path_or_url)
@@ -465,12 +438,6 @@ def get_image_base64(path_or_url):
     except:
         pass
     return None
-
-def get_initials(name):
-    """Ambil huruf pertama dari setiap kata untuk inisial."""
-    parts = name.split()
-    initials = ''.join([p[0].upper() for p in parts])
-    return initials if initials else name[:2].upper()
 
 # ======================== SIDEBAR NAVIGASI & PROFIL ========================
 # --- HEADER SIDEBAR ---
@@ -514,7 +481,7 @@ for col, (emoji, page_name, label) in zip(cols, menus):
             """, unsafe_allow_html=True)
         if st.button(emoji, key=f"nav_{emoji}", use_container_width=True):
             st.session_state.page = page_name
-            # Reset efek
+            # Reset efek visited agar balon muncul lagi
             if page_name == "🏠 Home":
                 st.session_state.home_visited = False
             elif page_name == "🌫️ Grayscale":
@@ -542,27 +509,31 @@ st.sidebar.markdown('<div class="sidebar-profile">', unsafe_allow_html=True)
 st.sidebar.markdown("### 👥 Pengembangan Aplikasi")
 st.sidebar.markdown("**Teknik Informatika**")
 
-# DATA ANGGOTA (tanpa inisial, akan di-generate otomatis)
+# DATA ANGGOTA
 anggota = [
     {
+        "inisial": "GDA",
         "nama": "Gea Destadia Al-Zahra",
         "ig": "@gea_destadia_10",
         "telp": "0831-5068-7481",
         "foto": "assets/gea.jpg"
     },
     {
+        "inisial": "LA",
         "nama": "Luna Amilia",
         "ig": "@luunaaamiiii",
         "telp": "0895-3780-96802",
         "foto": "assets/luna.jpg"
     },
     {
+        "inisial": "NA",
         "nama": "Nadia Azizah",
         "ig": "@ndyyzh",
         "telp": "0858-4631-3309",
         "foto": "assets/nadia.jpg"
     },
     {
+        "inisial": "DAAD",
         "nama": "Dalilah Arifah Ariandi DJR",
         "ig": "@adellianav",
         "telp": "0813-1211-6787",
@@ -575,7 +546,7 @@ for member in anggota:
     if foto_b64:
         avatar_html = f'<img src="data:image/jpeg;base64,{foto_b64}" />'
     else:
-        avatar_html = get_initials(member["nama"])
+        avatar_html = member["inisial"]
     
     st.sidebar.markdown(f"""
     <div class="profile-item">
@@ -598,381 +569,14 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# ======================== HALAMAN UTAMA ========================
+# ======================== ROUTING HALAMAN ========================
 page = st.session_state.page
 
 if page == "🏠 Home":
-    # ==================== HOME ====================
-    if not st.session_state.home_visited:
-        st.balloons()
-        st.session_state.home_visited = True
-
-    st.markdown("""
-    <div class="home-header">
-        <div class="bling-shower">✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨</div>
-        <h1>🌸 Selamat Datang di ANGEL 🌸</h1>
-        <p style="font-size:1.3rem; color:#BF360C; font-weight:500;">
-            Tempat terbaik untuk mengolah gambar Anda dengan sentuhan kecantikan.
-        </p>
-        <div class="bling-shower">✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #FFF9C4, #FFE082); 
-                padding: 1.5rem; border-radius: 16px; border: 1px solid #FFB300; 
-                margin-bottom: 2rem; text-align: center;">
-        <p style="font-size:1.2rem; color:#E65100;">
-            🌟 <b>ANGEL</b> hadir untuk membantu Anda mengubah gambar menjadi lebih artistik, 
-            ringkas, dan bermakna. Jelajahi fitur-fitur kami dan temukan keajaiban visual.
-        </p>
-        <p style="color:#BF360C; font-style:italic;">
-            "Setiap gambar memiliki cerita – biarkan kami membantu Anda menceritakannya."
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="content-card">
-        <h2>🌸 Fitur Unggulan</h2>
-        <p>
-            <b>🌫️ Grayscale</b> – Ubah gambar menjadi hitam-putih untuk efek artistik dan penghematan ukuran.<br>
-            <b>🗜️ Kompresi PCA</b> – Reduksi dimensi gambar menggunakan Principal Component Analysis, menjaga kualitas visual dengan ukuran lebih kecil.<br>
-            <b>🔍 Deteksi Kemiripan</b> – Bandingkan dua gambar dan dapatkan skor kemiripan secara otomatis.
-        </p>
-        <p>
-            <b>Manfaat:</b><br>
-            ✅ Menghemat ruang penyimpanan.<br>
-            ✅ Mempermudah analisis visual.<br>
-            ✅ Hasil cepat dan akurat.
-        </p>
-        <p style="color:#880E4F; font-style:italic;">
-            "Teknologi untuk kreativitas tanpa batas."
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # --- KETERANGAN TAMBAHAN DI BAWAH HOME ---
-    st.markdown("""
-    <div class="footer-note">
-        <p>📌 <b>Keterangan:</b> Halaman ini adalah pintu masuk utama. 
-        Gunakan menu di sidebar untuk mengakses fitur pengolahan gambar. 
-        Selamat berkarya! 🌸</p>
-    </div>
-    """, unsafe_allow_html=True)
-
+    home.tampilkan()
 elif page == "🌫️ Grayscale":
-    # ==================== GRAYSCALE ====================
-    if not st.session_state.grayscale_visited:
-        st.balloons()
-        st.session_state.grayscale_visited = True
-
-    st.markdown("""
-    <div class="grayscale-header">
-        <div class="flower-shower">🌸 🌺 🌷 🌹 🌻 🌼 🌸 🌺 🌷 🌹 🌻 🌼</div>
-        <h1>🌫️ Konversi ke Grayscale</h1>
-        <p>Ubah warna menjadi cerita hitam-putih yang abadi.</p>
-        <div class="flower-shower">🌸 🌺 🌷 🌹 🌻 🌼 🌸 🌺 🌷 🌹 🌻 🌼</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #FCE4EC, #FFF0F5); 
-                padding: 1.5rem; border-radius: 16px; border: 1px solid #F8BBD0; 
-                margin-bottom: 2rem; text-align: center;">
-        <p style="font-size:1.2rem; color:#6A1B4D;">
-            🌟 <b>Grayscale</b> adalah seni mengubah spektrum warna menjadi gradasi abu-abu yang elegan. 
-            Setiap piksel bercerita tentang kontras, tekstur, dan emosi – tanpa gangguan warna.
-        </p>
-        <p style="color:#880E4F; font-style:italic;">
-            "Terkadang, hitam-putih justru lebih hidup."
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    uploaded_file = st.file_uploader(
-        "📤 Unggah gambar (JPG, PNG, WEBP)",
-        type=["jpg", "jpeg", "png", "webp"],
-        accept_multiple_files=False
-    )
-
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        col_img1, col_img2 = st.columns(2, gap="medium")
-
-        with col_img1:
-            st.markdown('<div class="image-card">', unsafe_allow_html=True)
-            st.markdown("### 🖼️ Gambar Asli")
-            st.image(image, use_container_width=True)
-            st.markdown(f"*Ukuran: {image.width} x {image.height} px*")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with col_img2:
-            if st.button("🔄 Konversi ke Grayscale", use_container_width=True):
-                gray_image = image.convert("L")
-                gray_rgb = gray_image.convert("RGB")
-
-                st.markdown('<div class="image-card">', unsafe_allow_html=True)
-                st.markdown("### ⚫ Hasil Grayscale")
-                st.image(gray_rgb, use_container_width=True)
-                st.markdown(f"*Ukuran: {gray_rgb.width} x {gray_rgb.height} px*")
-                st.markdown('</div>', unsafe_allow_html=True)
-
-                buf = io.BytesIO()
-                gray_rgb.save(buf, format="PNG")
-                byte_im = buf.getvalue()
-                b64 = base64.b64encode(byte_im).decode()
-                href = f'<a href="data:image/png;base64,{b64}" download="grayscale.png" style="text-decoration:none;">'
-                href += '<button class="download-btn">⬇️ Download Hasil</button></a>'
-                st.markdown(href, unsafe_allow_html=True)
-
-                st.success("🌸 Semoga membantu, terima kasih banyak telah menggunakan jasa layanan kami, salam cinta ❤️")
-                st.balloons()
-
-                st.markdown("""
-                <div class="info-box">
-                    <b>💡 Manfaat Grayscale:</b><br>
-                    • Mengurangi kompleksitas warna, fokus pada bentuk dan tekstur.<br>
-                    • Menghemat ruang penyimpanan (ukuran file lebih kecil).<br>
-                    • Memberikan nuansa artistik dan klasik pada foto.
-                </div>
-                """, unsafe_allow_html=True)
-
-    else:
-        st.markdown("""
-        <div style="text-align:center; padding:2rem 0;">
-            <p style="font-size:1.2rem; color:#6A1B4D;">👆 Unggah gambar untuk mulai mengubahnya menjadi hitam-putih</p>
-            <p style="color:#AD1457; opacity:0.7;">Atau lihat contoh di bawah ini:</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        example_img = Image.new('RGB', (400, 300), color='#FCE4EC')
-        draw = ImageDraw.Draw(example_img)
-        draw.rectangle([50, 50, 150, 150], fill='#EC407A')
-        draw.rectangle([200, 50, 300, 150], fill='#42A5F5')
-        draw.rectangle([50, 180, 150, 280], fill='#66BB6A')
-        draw.rectangle([200, 180, 300, 280], fill='#FFA726')
-        st.image(example_img, caption="Contoh gambar (unggah gambar Anda sendiri untuk hasil nyata)", use_container_width=True)
-
-    # --- KETERANGAN TAMBAHAN DI BAWAH GRAYSCALE ---
-    st.markdown("""
-    <div class="footer-note">
-        <p>📌 <b>Keterangan:</b> Fitur ini mengubah gambar berwarna menjadi hitam-putih (grayscale). 
-        Hasilnya dapat diunduh dalam format PNG. Cocok untuk efek klasik dan penghematan ukuran file.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
+    grayscale.tampilkan()
 elif page == "🗜️ Kompresi":
-    # ==================== KOMPRESI PCA ====================
-    if not st.session_state.kompresi_visited:
-        st.balloons()
-        st.session_state.kompresi_visited = True
-
-    st.markdown("""
-    <div class="kompresi-header">
-        <div class="cloud-shower">☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️</div>
-        <h1>🗜️ Kompresi Gambar dengan PCA</h1>
-        <p>Kecilkan ukuran, pertahankan esensi.</p>
-        <div class="cloud-shower">☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️ ☁️</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB); 
-                padding: 1.5rem; border-radius: 16px; border: 1px solid #90CAF9; 
-                margin-bottom: 2rem; text-align: center;">
-        <p style="font-size:1.2rem; color:#0D47A1;">
-            ☁️ <b>Principal Component Analysis (PCA)</b> adalah teknik cerdas yang mereduksi dimensi gambar 
-            tanpa menghilangkan jati dirinya. Seperti awan yang menampung jutaan tetes air, 
-            PCA merangkum informasi penting dalam bentuk yang lebih ringkas.
-        </p>
-        <p style="color:#1565C0; font-style:italic;">
-            "Kecilkan ukuran, pertahankan esensi – itulah keajaiban kompresi."
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    uploaded_file = st.file_uploader(
-        "📤 Unggah gambar untuk dikompresi",
-        type=["jpg", "jpeg", "png", "webp"],
-        accept_multiple_files=False
-    )
-
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file).convert("RGB")
-        img_array = np.array(image)
-        h, w, c = img_array.shape
-
-        n_components = st.slider(
-            "Jumlah komponen PCA (semakin kecil, semakin besar kompresi)",
-            min_value=10,
-            max_value=min(h, w, 200),
-            value=min(h, w, 100),
-            step=10
-        )
-
-        if st.button("🚀 Kompresi dengan PCA", use_container_width=True):
-            try:
-                pca = PCA(n_components=n_components)
-                flat_img = img_array.reshape(-1, c)
-                reduced = pca.fit_transform(flat_img)
-                reconstructed = pca.inverse_transform(reduced)
-                compressed_img = reconstructed.reshape(h, w, c).astype(np.uint8)
-                compressed_pil = Image.fromarray(compressed_img)
-
-                col_ori, col_comp = st.columns(2)
-                with col_ori:
-                    st.markdown('<div class="image-card">', unsafe_allow_html=True)
-                    st.markdown("### 🖼️ Gambar Asli")
-                    st.image(image, use_container_width=True)
-                    st.markdown(f"*Ukuran: {w} x {h} px*")
-                    st.markdown('</div>', unsafe_allow_html=True)
-
-                with col_comp:
-                    st.markdown('<div class="image-card">', unsafe_allow_html=True)
-                    st.markdown(f"### 🗜️ Hasil Kompresi (n={n_components})")
-                    st.image(compressed_pil, use_container_width=True)
-                    st.markdown(f"*Ukuran: {w} x {h} px*")
-                    st.markdown('</div>', unsafe_allow_html=True)
-
-                buf = io.BytesIO()
-                compressed_pil.save(buf, format="PNG")
-                byte_im = buf.getvalue()
-                b64 = base64.b64encode(byte_im).decode()
-                href = f'<a href="data:image/png;base64,{b64}" download="compressed_pca.png" style="text-decoration:none;">'
-                href += '<button class="download-btn">⬇️ Download Hasil Kompresi</button></a>'
-                st.markdown(href, unsafe_allow_html=True)
-
-                st.markdown("""
-                <div class="info-box">
-                    <b>💡 Manfaat Kompresi PCA:</b><br>
-                    • Mengurangi ukuran file secara signifikan (hingga 70% lebih kecil).<br>
-                    • Mempercepat transfer dan penyimpanan data.<br>
-                    • Tetap mempertahankan fitur utama gambar – hanya yang tidak penting yang dibuang.
-                </div>
-                """, unsafe_allow_html=True)
-
-            except Exception as e:
-                st.error(f"Terjadi kesalahan saat kompresi: {e}")
-
-    else:
-        st.info("👆 Unggah gambar untuk memulai kompresi.")
-
-    # --- KETERANGAN TAMBAHAN DI BAWAH KOMPRESI ---
-    st.markdown("""
-    <div class="footer-note">
-        <p>📌 <b>Keterangan:</b> Kompresi PCA mengurangi dimensi gambar dengan mempertahankan informasi paling penting. 
-        Geser slider untuk mengatur tingkat kompresi. Hasil dapat diunduh sebagai PNG.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
+    kompresi.tampilkan()
 elif page == "🔍 Deteksi":
-    # ==================== DETEKSI KEMIRIPAN (dengan PCA) ====================
-    if not st.session_state.deteksi_visited:
-        st.balloons()
-        st.session_state.deteksi_visited = True
-
-    st.markdown("""
-    <div class="deteksi-header">
-        <div class="love-shower">❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖</div>
-        <h1>🔍 Deteksi Kemiripan Gambar</h1>
-        <p>Temukan koneksi visual di antara dua gambar.</p>
-        <div class="love-shower">❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖 ❤️ 💖</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div style="background: linear-gradient(135deg, #FCE4EC, #FFF0F5); 
-                padding: 1.5rem; border-radius: 16px; border: 1px solid #F8BBD0; 
-                margin-bottom: 2rem; text-align: center;">
-        <p style="font-size:1.2rem; color:#6A1B4D;">
-            ❤️ <b>Kemiripan</b> adalah jembatan antara dua gambar. Dengan <b>PCA</b> dan <b>Cosine Similarity</b>, 
-            kita mengukur seberapa dekat dua gambar dalam ruang fitur yang telah direduksi.
-        </p>
-        <p style="color:#880E4F; font-style:italic;">
-            "Dua gambar mungkin berbeda, tetapi jiwa visualnya bisa sama."
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    col_upload1, col_upload2 = st.columns(2)
-    with col_upload1:
-        img1 = st.file_uploader("📤 Gambar pertama", type=["jpg", "jpeg", "png"], key="img1")
-    with col_upload2:
-        img2 = st.file_uploader("📤 Gambar kedua", type=["jpg", "jpeg", "png"], key="img2")
-
-    if img1 is not None and img2 is not None:
-        image1 = Image.open(img1).convert("RGB")
-        image2 = Image.open(img2).convert("RGB")
-        # Resize ke ukuran yang sama (misal 100x100 untuk kecepatan)
-        size = (100, 100)
-        im1 = image1.resize(size)
-        im2 = image2.resize(size)
-
-        col_show1, col_show2 = st.columns(2)
-        with col_show1:
-            st.image(im1, caption="Gambar 1 (resize 100x100)", use_container_width=True)
-        with col_show2:
-            st.image(im2, caption="Gambar 2 (resize 100x100)", use_container_width=True)
-
-        # Slider untuk jumlah komponen PCA
-        n_components = st.slider(
-            "Jumlah komponen PCA untuk ekstraksi fitur",
-            min_value=5,
-            max_value=50,
-            value=20,
-            step=5,
-            key="pca_deteksi"
-        )
-
-        if st.button("🔎 Hitung Kemiripan", use_container_width=True):
-            try:
-                # Ubah gambar ke array dan flatten
-                arr1 = np.array(im1).astype(np.float32) / 255.0
-                arr2 = np.array(im2).astype(np.float32) / 255.0
-                # Flatten menjadi vektor 1D (100*100*3 = 30000)
-                vec1 = arr1.flatten().reshape(1, -1)
-                vec2 = arr2.flatten().reshape(1, -1)
-
-                # Gabungkan untuk PCA
-                all_vec = np.vstack([vec1, vec2])
-                pca = PCA(n_components=n_components)
-                pca.fit(all_vec)
-                # Transform kedua vektor
-                vec1_pca = pca.transform(vec1)
-                vec2_pca = pca.transform(vec2)
-
-                # Hitung cosine similarity
-                sim = cosine_similarity(vec1_pca, vec2_pca)[0][0]
-                persentase = sim * 100
-
-                # Varians yang dijelaskan
-                var_ratio = pca.explained_variance_ratio_.sum() * 100
-
-                # Tampilkan hasil
-                st.markdown('<div class="result-card">', unsafe_allow_html=True)
-                st.markdown(f'<div class="score">{persentase:.2f}%</div>', unsafe_allow_html=True)
-                if persentase >= 70:
-                    st.markdown('<div class="label">WAH MIRIP!! :D</div>', unsafe_allow_html=True)
-                else:
-                    st.markdown('<div class="label">Kurang Mirip</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="detail">Komponen PCA: {n_components}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="detail">Varians: {var_ratio:.1f}%</div>', unsafe_allow_html=True)
-                st.markdown('</div>', unsafe_allow_html=True)
-
-                st.balloons()
-
-            except Exception as e:
-                st.error(f"Terjadi kesalahan: {e}")
-
-    else:
-        st.info("👆 Unggah dua gambar untuk membandingkannya.")
-
-    # --- KETERANGAN TAMBAHAN DI BAWAH DETEKSI ---
-    st.markdown("""
-    <div class="footer-note">
-        <p>📌 <b>Keterangan:</b> Deteksi kemiripan menggunakan PCA untuk ekstraksi fitur dan Cosine Similarity untuk mengukur kedekatan. 
-        Semakin tinggi persentase, semakin mirip kedua gambar.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    deteksi.tampilkan()
