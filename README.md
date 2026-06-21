@@ -30,10 +30,10 @@ Untuk memenuhi proyek akhir Mata Kuliah **Aljabar Linear**
 
 ## 📁 Struktur File
 project:  
-├── app.py # File utama aplikasi (semua fitur dalam satu file)  
-├── requirements.txt # Daftar library yang dibutuhkan  
-├── README.md # Dokumentasi proyek (file ini)  
-└── logo-kelompok.PNG # Logo kelompok (ditampilkan di sidebar)
+├── app.py  _- File utama aplikasi (semua fitur dalam satu file)_   
+├── requirements.txt _- Daftar library yang dibutuhkan_  
+├── README.md _- Keterangan proyek (file ini)_  
+└── logo-kelompok.PNG _- Logo kelompok (ditampilkan di sidebar **rencana**)_
 
 ---
 
