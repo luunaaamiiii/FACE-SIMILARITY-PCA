@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw
 import io
 import base64
 import numpy as np
+import os
 
 # ======================== KONFIGURASI HALAMAN ========================
 st.set_page_config(
@@ -126,11 +127,11 @@ st.markdown("""
 
         /* ----- PROFIL TIM DI SIDEBAR ----- */
         .sidebar-profile {
-            margin-top: 20px;
-            padding: 10px 5px;
-            background: rgba(255,255,255,0.6);
-            border-radius: 16px;
-            border: 1px solid #F8BBD0;
+            margin-top: 10px;
+            padding: 8px 5px;
+            background: transparent !important; /* hilangkan background putih */
+            border: none !important; /* hilangkan border */
+            border-radius: 0;
         }
         .sidebar-profile h4 {
             color: #AD1457;
@@ -159,6 +160,12 @@ st.markdown("""
             font-size: 14px;
             margin-right: 10px;
             flex-shrink: 0;
+            overflow: hidden;
+        }
+        .sidebar-profile .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .sidebar-profile .profile-info .name {
             font-weight: bold;
@@ -315,19 +322,49 @@ st.sidebar.markdown('<div class="sidebar-profile">', unsafe_allow_html=True)
 st.sidebar.markdown("### 👥 Anggota Kelompok")
 st.sidebar.markdown("**Teknik Informatika**")
 
-# DATA ANGGOTA – GANTI DENGAN NAMA DAN KONTAK ASLI
+# DATA ANGGOTA – GANTI DENGAN NAMA, KONTAK, DAN PATH FOTO (gunakan gambar di folder 'assets' atau URL)
+# Jika foto tidak ditemukan, akan ditampilkan inisial.
 anggota = [
-    {"nama": "Andi Pratama", "ig": "@andi_p", "telp": "0812-3456-7890"},
-    {"nama": "Budi Santoso", "ig": "@budi_s", "telp": "0813-4567-8901"},
-    {"nama": "Citra Dewi", "ig": "@citra_d", "telp": "0814-5678-9012"},
-    {"nama": "Dian Sastro", "ig": "@dian_s", "telp": "0815-6789-0123"},
+    {
+        "nama": "Andi Pratama",
+        "ig": "@andi_p",
+        "telp": "0812-3456-7890",
+        "foto": "assets/andi.jpg"  # ganti dengan path foto Anda
+    },
+    {
+        "nama": "Budi Santoso",
+        "ig": "@budi_s",
+        "telp": "0813-4567-8901",
+        "foto": "assets/budi.jpg"
+    },
+    {
+        "nama": "Citra Dewi",
+        "ig": "@citra_d",
+        "telp": "0814-5678-9012",
+        "foto": "assets/citra.jpg"
+    },
+    {
+        "nama": "Dian Sastro",
+        "ig": "@dian_s",
+        "telp": "0815-6789-0123",
+        "foto": "assets/dian.jpg"
+    },
 ]
 
 for member in anggota:
     inisial = ''.join([kata[0] for kata in member["nama"].split()])
+    foto_path = member.get("foto", "")
+    # Cek apakah file foto ada
+    if os.path.exists(foto_path):
+        # Tampilkan gambar
+        avatar_html = f'<img src="data:image/jpeg;base64,{base64.b64encode(open(foto_path, "rb").read()).decode()}" />'
+    else:
+        # Gunakan inisial
+        avatar_html = inisial
+
     st.sidebar.markdown(f"""
     <div class="profile-item">
-        <div class="profile-avatar">{inisial}</div>
+        <div class="profile-avatar">{avatar_html}</div>
         <div class="profile-info">
             <div class="name">{member['nama']}</div>
             <div class="detail">📸 {member['ig']}</div>
