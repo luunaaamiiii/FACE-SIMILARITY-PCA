@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image, ImageDraw
 import io
 import base64
+import numpy as np
 
 st.set_page_config(
     page_title="LANG APP",
@@ -15,7 +16,6 @@ st.markdown("""
         /* ----- BACKGROUND UTAMA ----- */
         .stApp, .main, .block-container, section.main, div[data-testid="stSidebar"] {
             background-color: #FFF0F5 !important;
-            background-image: none !important;
         }
         body, p, div, span, label, h1, h2, h3, h4, h5, h6, .stMarkdown, .stText, .stCaption {
             color: #6A1B4D !important;
@@ -32,24 +32,7 @@ st.markdown("""
             background: linear-gradient(180deg, #FCE4EC, #FFF0F5) !important;
             border-right: 2px solid #F8BBD0 !important;
         }
-        .main-title {
-            text-align: center !important;
-            color: #AD1457 !important;
-            font-size: 42px !important;
-            font-weight: bold !important;
-            text-shadow: 0 2px 15px rgba(173, 20, 87, 0.2) !important;
-            display: block !important;
-            width: 100% !important;
-        }
-        .sub-title {
-            text-align: center !important;
-            color: #D81B60 !important;
-            font-size: 18px !important;
-            text-shadow: 0 1px 10px rgba(216, 27, 96, 0.15) !important;
-            display: block !important;
-            width: 100% !important;
-        }
-        h1, h2, h3, h4, h5, h6, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, .stMarkdown h4 {
+        h1, h2, h3, h4, h5, h6 {
             color: #AD1457 !important;
             font-weight: bold !important;
         }
@@ -99,46 +82,6 @@ st.markdown("""
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
-        .pink-badge {
-            display: block !important;
-            width: 100% !important;
-            background: linear-gradient(135deg, #FCE4EC, #F8BBD0) !important;
-            color: #AD1457 !important;
-            padding: 10px 18px !important;
-            border-radius: 12px !important;
-            font-weight: bold !important;
-            font-size: 16px !important;
-            border: 1px solid #EC407A !important;
-            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.12) !important;
-            text-align: center !important;
-            margin-bottom: 12px !important;
-        }
-        .result-card {
-            background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
-            padding: 20px !important;
-            border-radius: 15px !important;
-            text-align: center !important;
-            border: 1px solid #F8BBD0 !important;
-            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.1) !important;
-            height: 100% !important;
-        }
-        .explanation-box {
-            background: rgba(255, 255, 255, 0.5) !important;
-            padding: 15px !important;
-            border-radius: 12px !important;
-            border-left: 4px solid #EC407A !important;
-            box-shadow: 0 2px 10px rgba(233, 30, 99, 0.08) !important;
-            color: #6A1B4D !important;
-        }
-        .explanation-box b {
-            color: #AD1457 !important;
-        }
-        .explanation-box ul {
-            padding-left: 20px !important;
-        }
-        .explanation-box li {
-            margin-bottom: 6px !important;
-        }
         .stSidebar .stButton button {
             width: 48px !important;
             height: 48px !important;
@@ -172,11 +115,11 @@ st.markdown("""
             padding-top: 5px;
         }
 
-        /* ----- PROFIL TIM ----- */
+        /* ----- PROFIL TIM (KOTAK DI KIRI) ----- */
         .profile-card {
             background: white;
             border-radius: 20px;
-            padding: 1.5rem;
+            padding: 1.5rem 1rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 15px rgba(173,20,87,0.1);
             border: 1px solid #F8BBD0;
@@ -185,6 +128,7 @@ st.markdown("""
             color: #AD1457;
             text-align: center;
             margin-bottom: 1rem;
+            font-size: 1.3rem;
         }
         .profile-item {
             display: flex;
@@ -195,8 +139,8 @@ st.markdown("""
             background: #FFF5F8;
         }
         .profile-avatar {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             background: linear-gradient(135deg, #EC407A, #D81B60);
             display: flex;
@@ -204,8 +148,8 @@ st.markdown("""
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 20px;
-            margin-right: 15px;
+            font-size: 18px;
+            margin-right: 12px;
             flex-shrink: 0;
         }
         .profile-info {
@@ -214,45 +158,23 @@ st.markdown("""
         .profile-info .name {
             font-weight: bold;
             color: #6A1B4D;
+            font-size: 0.95rem;
         }
         .profile-info .detail {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #880E4F;
         }
-
-        /* ----- GAYA KHUSUS GRAYSCALE (bunga & header) ----- */
-        .grayscale-header {
+        .university {
             text-align: center;
-            padding: 1.5rem 0 0.5rem 0;
-            background: linear-gradient(135deg, #FCE4EC, #FFF0F5);
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            border: 1px solid #F8BBD0;
-        }
-        .grayscale-header h1 {
-            font-size: 2.8rem;
+            padding: 0.8rem 0;
             color: #AD1457;
-            margin: 0;
-            font-weight: 800;
-            text-shadow: 2px 2px 10px rgba(173,20,87,0.2);
-        }
-        .grayscale-header p {
-            font-size: 1.1rem;
-            color: #6A1B4D;
-            margin: 0.3rem 0 1rem 0;
-        }
-        .flower-shower {
-            font-size: 2rem;
-            letter-spacing: 6px;
-            color: #EC407A;
-            animation: twinkle 2s infinite alternate;
-        }
-        @keyframes twinkle {
-            0% { opacity: 0.6; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.05); }
+            font-weight: bold;
+            font-size: 1rem;
+            border-top: 2px solid #F8BBD0;
+            margin-top: 0.5rem;
         }
 
-        /* ----- GAYA UMUM KONTEN ----- */
+        /* ----- GAYA KONTEN UTAMA ----- */
         .content-card {
             background: white;
             border-radius: 20px;
@@ -304,14 +226,29 @@ st.markdown("""
         .info-box b {
             color: #AD1457;
         }
-        .university {
+        .grayscale-header {
             text-align: center;
-            padding: 1rem 0;
+            padding: 1rem 0 0.5rem 0;
+            background: linear-gradient(135deg, #FCE4EC, #FFF0F5);
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 1px solid #F8BBD0;
+        }
+        .grayscale-header h1 {
+            font-size: 2.5rem;
             color: #AD1457;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border-top: 2px solid #F8BBD0;
-            margin-top: 1rem;
+            margin: 0;
+            font-weight: 800;
+        }
+        .flower-shower {
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            color: #EC407A;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
         }
     </style>
 """, unsafe_allow_html=True)
@@ -321,8 +258,6 @@ if "page" not in st.session_state:
     st.session_state.page = "🏠 Home"
 if "grayscale_visited" not in st.session_state:
     st.session_state.grayscale_visited = False
-if "download_done" not in st.session_state:
-    st.session_state.download_done = False
 
 # ======================== SIDEBAR NAVIGASI ========================
 st.sidebar.markdown("🌸 **Haloo!!**")
@@ -355,7 +290,6 @@ for col, (emoji, page_name) in zip(cols, menus):
             st.rerun()
 
 st.sidebar.markdown("---")
-# PERUBAHAN DI SINI: caption Home menjadi "🏠 Beranda"
 if st.session_state.page == "🏠 Home":
     st.sidebar.markdown('<p class="sidebar-caption">🏠 Beranda</p>', unsafe_allow_html=True)
 elif st.session_state.page == "🌫️ Grayscale":
@@ -365,14 +299,14 @@ elif st.session_state.page == "🗜️ Kompresi":
 elif st.session_state.page == "🔍 Deteksi Kemiripan":
     st.sidebar.markdown('<p class="sidebar-caption">🔍 Cari kemiripan</p>', unsafe_allow_html=True)
 
-# ======================== FUNGSI PROFIL TIM ========================
+# ======================== FUNGSI PROFIL TIM (KOTAK DI KIRI) ========================
 def tampilkan_profil():
-    """Menampilkan kartu profil tim di kolom kiri."""
+    """Menampilkan kartu profil tim di kolom kiri (selalu muncul)."""
     st.markdown('<div class="profile-card">', unsafe_allow_html=True)
-    st.markdown("### 👥 Tim Pengembang")
+    st.markdown("### 👥 Anggota Kelompok")
     st.markdown("**Teknik Informatika**")
 
-    # Data anggota (ganti dengan data asli kalian)
+    # Data anggota (ganti dengan nama dan kontak asli)
     anggota = [
         {"nama": "Andi Pratama", "ig": "@andi_p", "telp": "0812-3456-7890"},
         {"nama": "Budi Santoso", "ig": "@budi_s", "telp": "0813-4567-8901"},
@@ -394,23 +328,22 @@ def tampilkan_profil():
         """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-    # Universitas selalu di bawah profil
     st.markdown('<div class="university">🎓 Universitas Negeri Semarang</div>', unsafe_allow_html=True)
 
 
-# ======================== HALAMAN ========================
+# ======================== HALAMAN UTAMA ========================
 page = st.session_state.page
 
-# Layout dua kolom: kiri (profil) 1/4, kanan (konten) 3/4
+# Layout dua kolom: kiri (profil) lebar 1/4, kanan (konten) lebar 3/4
 col_left, col_right = st.columns([1, 3], gap="large")
 
+# ---------- KOLOM KIRI (PROFIL TIM) – SELALU DITAMPILKAN ----------
 with col_left:
     tampilkan_profil()
 
+# ---------- KOLOM KANAN (KONTEN MENU) ----------
 with col_right:
     if page == "🏠 Home":
-        # ---------- HOME ----------
         st.markdown("""
         <div class="content-card">
             <h2>🌸 Selamat Datang di Aplikasi LANG</h2>
@@ -436,7 +369,6 @@ with col_right:
         """, unsafe_allow_html=True)
 
     elif page == "🌫️ Grayscale":
-        # ---------- GRAYSCALE ----------
         if not st.session_state.grayscale_visited:
             st.balloons()
             st.session_state.grayscale_visited = True
@@ -529,7 +461,6 @@ with col_right:
             st.image(example_img, caption="Contoh gambar (unggah gambar Anda sendiri untuk hasil nyata)", use_container_width=True)
 
     elif page == "🗜️ Kompresi":
-        # ---------- KOMPRESI (PCA) ----------
         st.markdown("""
         <div class="content-card">
             <h2>🗜️ Kompresi Gambar dengan PCA</h2>
@@ -553,7 +484,6 @@ with col_right:
 
         if uploaded_file is not None:
             image = Image.open(uploaded_file).convert("RGB")
-            import numpy as np
             img_array = np.array(image)
             h, w, c = img_array.shape
 
@@ -610,7 +540,6 @@ with col_right:
             st.info("👆 Unggah gambar untuk memulai kompresi.")
 
     elif page == "🔍 Deteksi Kemiripan":
-        # ---------- DETEKSI KEMIRIPAN ----------
         st.markdown("""
         <div class="content-card">
             <h2>🔍 Deteksi Kemiripan Gambar</h2>
@@ -646,7 +575,6 @@ with col_right:
 
             if st.button("🔎 Hitung Kemiripan", use_container_width=True):
                 try:
-                    import numpy as np
                     from skimage.metrics import structural_similarity as ssim
                     from skimage.metrics import mean_squared_error
 
