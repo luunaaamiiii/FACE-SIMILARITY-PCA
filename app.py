@@ -41,17 +41,25 @@ st.markdown("""
             font-weight: bold !important;
         }
 
+        /* ----- SIDEBAR UTAMA - Rapat ke atas ----- */
+        section[data-testid="stSidebar"] {
+            padding-top: 0 !important;
+        }
+        section[data-testid="stSidebar"] > div {
+            padding-top: 0 !important;
+        }
+
         /* ----- SIDEBAR DEKORASI ----- */
         .sidebar-header {
             text-align: center;
-            padding: 10px 0 5px 0;
+            padding: 10px 0 0 0;
             border-bottom: 2px solid #F8BBD0;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .sidebar-header .logo {
             font-size: 50px;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
         .sidebar-header .title {
             font-size: 24px;
@@ -161,7 +169,7 @@ st.markdown("""
             margin-bottom: 8px;
         }
 
-        /* ----- PROFIL TIM DI SIDEBAR (kotak per anggota) ----- */
+        /* ----- PROFIL TIM DI SIDEBAR (kotak per anggota solid) ----- */
         .sidebar-profile {
             margin-top: 10px;
             padding: 8px 5px;
@@ -180,14 +188,14 @@ st.markdown("""
             margin-bottom: 10px;
             padding: 8px 10px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 2px 8px rgba(173,20,87,0.08);
+            background: white !important; /* solid putih */
+            box-shadow: 0 2px 8px rgba(173,20,87,0.15);
             border: 1px solid #F8BBD0;
             transition: 0.2s;
         }
         .sidebar-profile .profile-item:hover {
             transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(173,20,87,0.15);
+            box-shadow: 0 4px 12px rgba(173,20,87,0.2);
         }
         .sidebar-profile .profile-avatar {
             width: 40px;
