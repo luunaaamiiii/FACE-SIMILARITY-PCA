@@ -177,17 +177,17 @@ st.markdown("""
         .sidebar-profile .profile-item {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
-            padding: 10px 12px;
+            margin-bottom: 12px;
+            padding: 12px 14px;
             border-radius: 14px;
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 10px rgba(173,20,87,0.08);
-            border: 1px solid #F8BBD0;
+            background: #ffffff !important;          /* putih solid */
+            border: 2px solid #EC407A !important;   /* kotak pink tegas */
+            box-shadow: 0 4px 12px rgba(173,20,87,0.15);
             transition: 0.2s;
         }
         .sidebar-profile .profile-item:hover {
             transform: scale(1.02);
-            box-shadow: 0 4px 14px rgba(173,20,87,0.15);
+            box-shadow: 0 6px 18px rgba(173,20,87,0.25);
         }
         .sidebar-profile .profile-avatar {
             width: 48px;
