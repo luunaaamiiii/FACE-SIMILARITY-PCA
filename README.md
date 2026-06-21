@@ -28,10 +28,10 @@ Dibangun dengan **Streamlit** dan dikembangkan oleh **Kelompok 2 – Teknik Info
 ---
 
 ## 📁 Struktur File
-project/
-├── app.py # File utama aplikasi (semua fitur dalam satu file)
-├── requirements.txt # Daftar library yang dibutuhkan
-├── README.md # Dokumentasi proyek (file ini)
+project:  
+├── app.py # File utama aplikasi (semua fitur dalam satu file)  
+├── requirements.txt # Daftar library yang dibutuhkan  
+├── README.md # Dokumentasi proyek (file ini)  
 └── logo-kelompok.PNG # Logo kelompok (ditampilkan di sidebar)
 
 ---
@@ -73,20 +73,20 @@ cd FACE-SIMILARITY-PCA
 ---
 
 ## 📞 Kontak
-Gea Destadia Al-Zahra
-IG = @gea_destadia_10
+**Gea Destadia Al-Zahra**  
+IG = @gea_destadia_10  
 WA = 0831-5068-7481
 
-Luna Amilia
-IG = @luunaaamiiii
+**Luna Amilia**  
+IG = @luunaaamiiii  
 Email = lunaamilia0@gmail.com
 
-Nadia Azizah
-IG = @ndyyzh
+**Nadia Azizah**  
+IG = @ndyyzh  
 WA = 0858-4631-3309
 
-Dalilah Arifah Ariandi DJR
-IG = @adellianav
+**Dalilah Arifah Ariandi DJR**  
+IG = @adellianav  
 WA = 0813-1211-6787
 
 ---
