@@ -462,6 +462,11 @@ menus = [
     ("🗜️", "🗜️ Kompresi", "Kompresi"),
     ("🔍", "🔍 Deteksi", "Deteksi")
 ]
+st.sidebar.markdown("""
+<div style="text-align: center; font-size: 14px; color: #880E4F; padding: 0 5px 8px 5px; font-style: italic;">
+    HOME  GRAYSCALE  KOMPRESI  DETEKSI ,<br> silahkan pilih menu yang anda inginkan.
+</div>
+""", unsafe_allow_html=True)
 
 cols = st.sidebar.columns(4)
 for col, (emoji, page_name, label) in zip(cols, menus):
