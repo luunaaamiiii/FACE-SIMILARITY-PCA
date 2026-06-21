@@ -4,6 +4,7 @@ import io
 import base64
 import numpy as np
 
+# ======================== KONFIGURASI HALAMAN ========================
 st.set_page_config(
     page_title="LANG APP",
     page_icon="🌸",
@@ -13,7 +14,7 @@ st.set_page_config(
 # ======================== CSS GLOBAL ========================
 st.markdown("""
     <style>
-        /* ----- BACKGROUND UTAMA ----- */
+        /* ----- BACKGROUND & WARNA DASAR ----- */
         .stApp, .main, .block-container, section.main, div[data-testid="stSidebar"] {
             background-color: #FFF0F5 !important;
         }
@@ -36,6 +37,8 @@ st.markdown("""
             color: #AD1457 !important;
             font-weight: bold !important;
         }
+
+        /* ----- TOMBOL ----- */
         .stButton button {
             background: linear-gradient(135deg, #EC407A, #D81B60) !important;
             color: white !important;
@@ -50,6 +53,8 @@ st.markdown("""
             transform: scale(1.03) translateY(-2px) !important;
             box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4) !important;
         }
+
+        /* ----- FILE UPLOADER ----- */
         div[data-testid="stFileUploader"] {
             background: linear-gradient(135deg, #FCE4EC, #FFF0F5) !important;
             border: 2px dashed #EC407A !important;
@@ -78,10 +83,14 @@ st.markdown("""
         div[data-testid="stFileUploader"]:hover {
             border-color: #D81B60 !important;
         }
+
+        /* ----- SLIDER ----- */
         .stSlider > div {
             background: rgba(255, 255, 255, 0.4) !important;
             border-radius: 10px !important;
         }
+
+        /* ----- SIDEBAR NAVIGASI (tombol bulat) ----- */
         .stSidebar .stButton button {
             width: 48px !important;
             height: 48px !important;
@@ -226,6 +235,8 @@ st.markdown("""
         .info-box b {
             color: #AD1457;
         }
+
+        /* ----- GAYA KHUSUS GRAYSCALE (bunga & header) ----- */
         .grayscale-header {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -299,14 +310,14 @@ elif st.session_state.page == "🗜️ Kompresi":
 elif st.session_state.page == "🔍 Deteksi Kemiripan":
     st.sidebar.markdown('<p class="sidebar-caption">🔍 Cari kemiripan</p>', unsafe_allow_html=True)
 
-# ======================== FUNGSI PROFIL TIM (KOTAK DI KIRI) ========================
+# ======================== FUNGSI PROFIL TIM ========================
 def tampilkan_profil():
     """Menampilkan kartu profil tim di kolom kiri (selalu muncul)."""
     st.markdown('<div class="profile-card">', unsafe_allow_html=True)
     st.markdown("### 👥 Anggota Kelompok")
     st.markdown("**Teknik Informatika**")
 
-    # Data anggota (ganti dengan nama dan kontak asli)
+    # DATA ANGGOTA – GANTI DENGAN NAMA DAN KONTAK ASLI KELOMPOK ANDA
     anggota = [
         {"nama": "Andi Pratama", "ig": "@andi_p", "telp": "0812-3456-7890"},
         {"nama": "Budi Santoso", "ig": "@budi_s", "telp": "0813-4567-8901"},
@@ -344,6 +355,7 @@ with col_left:
 # ---------- KOLOM KANAN (KONTEN MENU) ----------
 with col_right:
     if page == "🏠 Home":
+        # ==================== HOME ====================
         st.markdown("""
         <div class="content-card">
             <h2>🌸 Selamat Datang di Aplikasi LANG</h2>
@@ -369,6 +381,7 @@ with col_right:
         """, unsafe_allow_html=True)
 
     elif page == "🌫️ Grayscale":
+        # ==================== GRAYSCALE ====================
         if not st.session_state.grayscale_visited:
             st.balloons()
             st.session_state.grayscale_visited = True
@@ -424,6 +437,7 @@ with col_right:
                     st.markdown(f"*Ukuran: {gray_rgb.width} x {gray_rgb.height} px*")
                     st.markdown('</div>', unsafe_allow_html=True)
 
+                    # Tombol download
                     buf = io.BytesIO()
                     gray_rgb.save(buf, format="PNG")
                     byte_im = buf.getvalue()
@@ -432,6 +446,7 @@ with col_right:
                     href += '<button class="download-btn">⬇️ Download Hasil</button></a>'
                     st.markdown(href, unsafe_allow_html=True)
 
+                    # Pesan sukses
                     st.success("🌸 Semoga membantu, terima kasih banyak telah menggunakan jasa layanan kami, salam cinta ❤️")
                     st.balloons()
 
@@ -452,6 +467,7 @@ with col_right:
             </div>
             """, unsafe_allow_html=True)
 
+            # Contoh gambar placeholder
             example_img = Image.new('RGB', (400, 300), color='#FCE4EC')
             draw = ImageDraw.Draw(example_img)
             draw.rectangle([50, 50, 150, 150], fill='#EC407A')
@@ -461,6 +477,7 @@ with col_right:
             st.image(example_img, caption="Contoh gambar (unggah gambar Anda sendiri untuk hasil nyata)", use_container_width=True)
 
     elif page == "🗜️ Kompresi":
+        # ==================== KOMPRESI PCA ====================
         st.markdown("""
         <div class="content-card">
             <h2>🗜️ Kompresi Gambar dengan PCA</h2>
@@ -519,6 +536,7 @@ with col_right:
                     st.markdown(f"*Ukuran: {w} x {h} px*")
                     st.markdown('</div>', unsafe_allow_html=True)
 
+                # Tombol download
                 buf = io.BytesIO()
                 compressed_pil.save(buf, format="PNG")
                 byte_im = buf.getvalue()
@@ -540,6 +558,7 @@ with col_right:
             st.info("👆 Unggah gambar untuk memulai kompresi.")
 
     elif page == "🔍 Deteksi Kemiripan":
+        # ==================== DETEKSI KEMIRIPAN ====================
         st.markdown("""
         <div class="content-card">
             <h2>🔍 Deteksi Kemiripan Gambar</h2>
