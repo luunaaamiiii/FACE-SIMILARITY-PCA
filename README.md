@@ -1,51 +1,82 @@
-[README.md](https://github.com/user-attachments/files/29121497/README.md)
-# Deteksi Kemiripan Wajah dengan PCA (Eigenfaces)
+# 🌸 ANGEL – Aplikasi PCA untuk Grayscale, Kompresi, & Deteksi Kemiripan Wajah
 
-Aplikasi berbasis web untuk mendeteksi kemiripan antara dua wajah menggunakan metode Principal Component Analysis (PCA) atau yang lebih dikenal sebagai **Eigenfaces**.
-
----
-
-## 📖 Deskripsi Proyek
-
-Proyek ini dibuat untuk memenuhi tugas mata kuliah [Aljabar_Linear]. Aplikasi ini memungkinkan pengguna untuk:
-
-1. Mengunggah **dataset wajah** (minimal 5 gambar) sebagai data latih.
-2. Mengunggah **dua gambar wajah** yang akan dibandingkan.
-3. Mendapatkan **skor kemiripan** (Cosine Similarity) antara 0% – 100%.
-4. Mengetahui **kesimpulan otomatis** (Mirip / Cukup Mirip / Tidak Mirip).
-5. Melihat **Kurva Akumulasi Informasi PCA** (grafik varians).
+Aplikasi berbasis web untuk mengolah gambar menggunakan **Principal Component Analysis (PCA)**.  
+Dibangun dengan **Streamlit** dan dikembangkan oleh **Kelompok 2 – Teknik Informatika Universitas Negeri Semarang**.
 
 ---
 
 ## ✨ Fitur Unggulan
 
-- Upload data latih langsung di sidebar.
-- Tampilan modern dengan **card** dan **warna profesional**.
-- Grafik interaktif menggunakan **Matplotlib**.
-- **Animasi loading** dan progress bar.
-- **Responsif** (bisa diakses dari HP, tablet, atau laptop).
-- Kesimpulan dilengkapi dengan **balon animasi** jika wajah mirip.
+- **🌫️ Grayscale** – Mengubah gambar berwarna menjadi hitam-putih (grayscale) untuk efek artistik dan penghematan ukuran file.
+
+- **🗜️ Kompresi PCA** – Mereduksi dimensi gambar menggunakan PCA pada setiap kanal warna (R, G, B) secara terpisah. Menampilkan metrik kualitas seperti SSIM, PSNR, rasio kompresi, serta kurva akumulasi informasi PCA.
+
+- **🔍 Deteksi Kemiripan Wajah** – Membandingkan dua gambar wajah menggunakan metode Eigenfaces (PCA) dan Cosine Similarity. Menampilkan skor kemiripan dalam persen, kesimpulan (Mirip / Cukup Mirip / Tidak Mirip), dan grafik akumulasi informasi.
 
 ---
 
 ## 🛠️ Teknologi yang Digunakan
 
-| Teknologi | Kegunaan |
-|-----------|----------|
-| **Python 3.8+** | Bahasa pemrograman utama |
-| **Streamlit** | Membangun antarmuka web |
-| **OpenCV & PIL** | Membaca, mengubah grayscale, dan resize gambar |
-| **Scikit-learn** | Implementasi PCA dan Cosine Similarity |
-| **Matplotlib** | Membuat grafik akumulasi varians |
-| **GitHub** | Menyimpan kode secara online |
-| **Streamlit Cloud** | Men-deploy aplikasi ke internet |
+- **Python 3.8+** – Bahasa pemrograman utama.
+- **Streamlit 1.28+** – Framework untuk membangun antarmuka web secara cepat.
+- **OpenCV 4.8+** – Digunakan untuk pemrosesan gambar dan deteksi wajah (Haar Cascade).
+- **Scikit-learn 1.3+** – Implementasi PCA dan Cosine Similarity.
+- **Scikit-image 0.21+** – Menghitung metrik kualitas SSIM dan PSNR.
+- **Matplotlib 3.7+** – Membuat grafik akumulasi informasi PCA.
+- **Pillow 10.0+** – Manipulasi gambar dasar (membuka, menyimpan, resize).
 
 ---
 
-## 🚀 Cara Menjalankan di Lokal (Localhost)
+## 📁 Struktur File
+project/
+├── app.py # File utama aplikasi (semua fitur dalam satu file)
+├── requirements.txt # Daftar library yang dibutuhkan
+├── README.md # Dokumentasi proyek (file ini)
+└── logo-kelompok.PNG # Logo kelompok (ditampilkan di sidebar)
 
-Ikuti langkah-langkah berikut jika ingin menjalankan aplikasi di komputer sendiri:
+---
 
-1. **Clone repositori** ini ke laptop:
-   ```bash
-   git clone https://github.com/luunaaamiiii/FACE-SIMILARITY-PCA
+## 🚀 Cara Menjalankan di Lokal
+
+1. **Clone repositori** ini ke komputer kamu: git clone https://github.com/luunaamiiii/FACE-SIMILARITY-PCA.git
+cd FACE-SIMILARITY-PCA
+2. **Install semua library** yang dibutuhkan: pip install -r requirements.txt
+3. **Jalankan aplikasi Streamlit**: streamlit run app.py
+4. Buka browser dan akses `http://localhost:8501`.
+
+---
+
+## 👥 Anggota Kelompok
+
+- **Gea Destadia Al-Zahra**
+- **Luna Amilia**
+- **Dalilah Arifah Ariandi DJR**
+- **Nadia Azzizah**
+
+**Universitas Negeri Semarang** – Teknik Informatika
+
+---
+
+## 📌 Catatan Penting
+
+- **Koneksi internet** diperlukan saat pertama kali membuka halaman Deteksi untuk mengunduh dataset LFW (Labeled Faces in the Wild) sebagai data latih default. Proses ini hanya terjadi sekali.
+- Pastikan file **`logo-kelompok.PNG`** berada di folder yang sama dengan `app.py`, karena digunakan sebagai logo di sidebar.
+- Untuk hasil terbaik di halaman Deteksi Kemiripan, gunakan foto wajah yang **jelas, tidak menggunakan filter, dan tidak berekspresi berlebihan**.
+
+---
+
+## 🔗 Link Aplikasi
+
+- **Streamlit Cloud**: [https://face-similarity-pca-xxxxxx.streamlit.app](https://face-similarity-pca-xxxxxx.streamlit.app)
+- **GitHub**: [https://github.com/luunaamiiii/FACE-SIMILARITY-PCA](https://github.com/luunaamiiii/FACE-SIMILARITY-PCA)
+
+---
+
+## 📞 Kontak
+
+Jika ada pertanyaan, silakan hubungi ketua kelompok melalui instagram atau whatsapp yang tertera di app.
+
+---
+
+**🌸 Made with Love by Team ANGEL**  
+*Teknologi untuk kreativitas tanpa batas.*
