@@ -390,7 +390,10 @@ def get_image_base64(path_or_url):
     return None
 
 # ======================== SIDEBAR NAVIGASI & PROFIL ========================
-st.sidebar.markdown("🌸 **Haloo!!**")
+st.sidebar.markdown("🌸 **Haloo!! **")
+st.sidebar.markdown(" ** Lupakan dia yang membuatmu terluka **")
+st.sidebar.markdown(" ** Semoga web ini bisa membuatmu bahagia **")
+st.sidebar.markdown(" ** 🌸🌸🌸 **")
 
 menus = [
     ("🏠", "🏠 Home"),
@@ -502,7 +505,7 @@ if page == "🏠 Home":
     st.markdown("""
     <div class="home-header">
         <div class="bling-shower">✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨ ✨</div>
-        <h1>🌸 Selamat Datang di Aplikasi ANGEL</h1>
+        <h1>🌸 Selamat Datang di Web ANGEL 🌸</h1>
         <p style="font-size:1.3rem; color:#BF360C; font-weight:500;">
             Tempat terbaik untuk mengolah gambar Anda dengan sentuhan kecantikan.
         </p>
@@ -515,7 +518,7 @@ if page == "🏠 Home":
                 padding: 1.5rem; border-radius: 16px; border: 1px solid #FFB300; 
                 margin-bottom: 2rem; text-align: center;">
         <p style="font-size:1.2rem; color:#E65100;">
-            🌟 <b>LANG</b> hadir untuk membantu Anda mengubah gambar menjadi lebih artistik, 
+            🌟 <b>ANGEL</b> hadir untuk membantu Anda mengubah gambar menjadi lebih artistik, 
             ringkas, dan bermakna. Jelajahi fitur-fitur kami dan temukan keajaiban visual.
         </p>
         <p style="color:#BF360C; font-style:italic;">
