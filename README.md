@@ -38,7 +38,7 @@ project:
 
 ## 🚀 Cara Menjalankan di Lokal
 
-1. **Clone repositori** ini ke komputer kamu: git clone https://github.com/luunaamiiii/FACE-SIMILARITY-PCA.gitcdFACE-SIMILARITY-PCA
+1. **Clone repositori** ini ke komputer kamu: git clone https://github.com/luunaamiiii/FACE-SIMILARITY-PCA
 2. **Install semua library** yang dibutuhkan: pip install -r requirements.txt
 3. **Jalankan aplikasi Streamlit**: streamlit run app.py
 4. Buka browser dan akses `http://localhost:8501`.
