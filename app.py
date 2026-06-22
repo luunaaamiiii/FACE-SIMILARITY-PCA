@@ -11,9 +11,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import peak_signal_noise_ratio as psnr
+from sklearn.datasets import fetch_lfw_people
 import tempfile
 import zipfile
-from sklearn.datasets import fetch_lfw_people
 import cv2
 import warnings
 warnings.filterwarnings("ignore")
@@ -95,6 +95,7 @@ st.markdown("""
             border: none !important;
             box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3) !important;
             transition: 0.3s !important;
+            width: 100% !important;  /* PAKSA FULL WIDTH */
         }
         .stButton button:hover {
             transform: scale(1.03) translateY(-2px) !important;
@@ -137,7 +138,7 @@ st.markdown("""
             border-radius: 10px !important;
         }
 
-        /* ----- SIDEBAR NAVIGASI ----- */
+        /* ----- SIDEBAR NAVIGASI (tombol bulat) ----- */
         .stSidebar .stButton button {
             width: 48px !important;
             height: 48px !important;
@@ -172,7 +173,7 @@ st.markdown("""
             margin-bottom: 8px;
         }
 
-        /* ----- PROFIL TIM DI SIDEBAR ----- */
+        /* ----- PROFIL TIM DI SIDEBAR (KOTAK PER ANGGOTA) ----- */
         .sidebar-profile {
             margin-top: 8px;
             padding: 5px 5px;
@@ -293,7 +294,7 @@ st.markdown("""
             color: #AD1457;
         }
 
-        /* ----- KOTAK KETERANGAN TAMBAHAN ----- */
+        /* ----- KOTAK KETERANGAN TAMBAHAN (di bawah setiap halaman) ----- */
         .footer-note {
             background: linear-gradient(135deg, #FFF9C4, #FFE082);
             border-radius: 16px;
@@ -308,7 +309,7 @@ st.markdown("""
             font-size: 1rem;
         }
 
-        /* ----- GAYA KHUSUS HOME ----- */
+        /* ----- GAYA KHUSUS HOME (bling-bling) ----- */
         .home-header {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -341,7 +342,7 @@ st.markdown("""
             100% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* ----- GAYA KHUSUS GRAYSCALE ----- */
+        /* ----- GAYA KHUSUS GRAYSCALE (bunga) ----- */
         .grayscale-header {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -367,7 +368,7 @@ st.markdown("""
             100% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* ----- GAYA KHUSUS KOMPRESI ----- */
+        /* ----- GAYA KHUSUS KOMPRESI (awan) ----- */
         .kompresi-header {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -393,7 +394,7 @@ st.markdown("""
             100% { transform: translateY(-8px); }
         }
 
-        /* ----- GAYA KHUSUS DETEKSI ----- */
+        /* ----- GAYA KHUSUS DETEKSI (love) ----- */
         .deteksi-header {
             text-align: center;
             padding: 1rem 0 0.5rem 0;
@@ -476,6 +477,7 @@ st.markdown("""
             margin: 1rem 0;
             border: 1px solid #F8BBD0;
         }
+        /* ----- BADGE PINK UNTUK LABEL FOTO ----- */
         .pink-badge {
             display: block !important;
             width: 100% !important;
@@ -536,7 +538,6 @@ def get_image_base64(path_or_url):
     return None
 
 # ======================== SIDEBAR NAVIGASI & PROFIL ========================
-# --- HEADER SIDEBAR ---
 st.sidebar.markdown("""
 <div class="sidebar-header">
     <span class="logo">🌸</span>
@@ -545,14 +546,12 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# --- PESAN DI BAWAH HEADER ---
 st.sidebar.markdown("""
 <div style="text-align: center; font-size: 14px; color: #880E4F; padding: 0 5px 8px 5px; font-style: italic;">
     Lupakan dia yang membuatmu terluka,<br>semoga web ini bisa membuatmu bahagia. <br> <br> Silahkan pilih menu yang diinginkan !
 </div>
 """, unsafe_allow_html=True)
 
-# --- MENU NAVIGASI ---
 menus = [
     ("🏠", "🏠 Home", "Home"),
     ("🌫️", "🌫️ Grayscale", "Grayscale"),
@@ -577,7 +576,6 @@ for col, (emoji, page_name, label) in zip(cols, menus):
             """, unsafe_allow_html=True)
         if st.button(emoji, key=f"nav_{emoji}", use_container_width=True):
             st.session_state.page = page_name
-            # Reset efek
             if page_name == "🏠 Home":
                 st.session_state.home_visited = False
             elif page_name == "🌫️ Grayscale":
@@ -588,7 +586,6 @@ for col, (emoji, page_name, label) in zip(cols, menus):
                 st.session_state.deteksi_visited = False
             st.rerun()
 
-# --- CAPTION DI BAWAH TOMBOL ---
 st.sidebar.markdown("---")
 if st.session_state.page == "🏠 Home":
     st.sidebar.markdown('<p class="sidebar-caption">🏠 Home</p>', unsafe_allow_html=True)
@@ -599,7 +596,6 @@ elif st.session_state.page == "🗜️ Kompresi":
 elif st.session_state.page == "🔍 Deteksi":
     st.sidebar.markdown('<p class="sidebar-caption">🔍 Deteksi Kemiripan</p>', unsafe_allow_html=True)
 
-# ======================== PROFIL TIM DI SIDEBAR ========================
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="sidebar-profile">', unsafe_allow_html=True)
 st.sidebar.markdown("### 👥 Pengembang Aplikasi")
@@ -654,7 +650,6 @@ st.sidebar.markdown("""
 page = st.session_state.page
 
 if page == "🏠 Home":
-    # ==================== HOME ====================
     if not st.session_state.home_visited:
         st.balloons()
         st.session_state.home_visited = True
@@ -814,7 +809,6 @@ elif page == "🌫️ Grayscale":
         """, unsafe_allow_html=True)
 
 elif page == "🗜️ Kompresi":
-    # ==================== KOMPRESI PCA WARNA (RGB) - TIDAK DIUBAH KE GRAYSCALE ====================
     if not st.session_state.kompresi_visited:
         st.balloons()
         st.session_state.kompresi_visited = True
@@ -851,12 +845,10 @@ elif page == "🗜️ Kompresi":
     )
 
     if uploaded_file is not None:
-        # Baca gambar RGB
         image = Image.open(uploaded_file).convert("RGB")
         img_array = np.array(image, dtype=np.float32)
         h, w, c = img_array.shape  # c = 3
 
-        # Pilihan mode: berdasarkan jumlah komponen (k) atau persentase varians
         mode = st.radio(
             "Pilih mode pengaturan kompresi:",
             ["Jumlah komponen (k)", "Persentase varians"],
@@ -864,7 +856,7 @@ elif page == "🗜️ Kompresi":
             key="kompresi_mode"
         )
 
-        max_k = min(h, w)  # batas maksimum k (tidak boleh lebih dari dimensi)
+        max_k = min(h, w)
 
         if mode == "Jumlah komponen (k)":
             k = st.slider(
@@ -876,7 +868,7 @@ elif page == "🗜️ Kompresi":
                 key="k_slider"
             )
             variance_target = None
-        else:  # Persentase varians
+        else:
             variance_target = st.slider(
                 "Persentase varians yang dipertahankan (%)",
                 min_value=50,
@@ -889,9 +881,7 @@ elif page == "🗜️ Kompresi":
 
         if st.button("🚀 Kompresi dengan PCA", use_container_width=True):
             try:
-                # Tentukan k jika mode persentase varians
                 if mode == "Persentase varians":
-                    # Fit PCA pada channel R untuk mendapatkan explained variance
                     pca_full = PCA()
                     pca_full.fit(img_array[:, :, 0])
                     cumsum = np.cumsum(pca_full.explained_variance_ratio_)
@@ -900,59 +890,50 @@ elif page == "🗜️ Kompresi":
                         k = max_k
                     st.info(f"Untuk mempertahankan {variance_target*100:.0f}% varians, diperlukan k = {k} komponen.")
 
-                # Pastikan k tidak melebihi dimensi
                 if k > max_k:
                     k = max_k
                     st.warning(f"k dibatasi hingga {max_k} karena dimensi gambar.")
 
-                # Lakukan PCA pada setiap channel dengan k komponen
                 channels_recon = []
                 for i in range(3):
-                    channel = img_array[:, :, i]  # shape (h, w)
+                    channel = img_array[:, :, i]
                     pca = PCA(n_components=k)
-                    reduced = pca.fit_transform(channel)  # (h, k)
-                    recon = pca.inverse_transform(reduced)  # (h, w)
+                    reduced = pca.fit_transform(channel)
+                    recon = pca.inverse_transform(reduced)
                     channels_recon.append(recon)
 
-                # Gabungkan channel
-                reconstructed = np.stack(channels_recon, axis=2)  # (h, w, 3)
+                reconstructed = np.stack(channels_recon, axis=2)
                 reconstructed = np.clip(reconstructed, 0, 255).astype(np.uint8)
                 img_reconstructed = Image.fromarray(reconstructed, mode='RGB')
 
-                # Hitung metrik kualitas (multichannel)
                 img_norm = img_array / 255.0
                 recon_norm = reconstructed / 255.0
-                # SSIM dengan channel_axis=2
                 ssim_val = ssim(img_norm, recon_norm, channel_axis=2, data_range=1.0)
-                # PSNR rata-rata per channel
                 psnr_vals = []
                 for i in range(3):
                     psnr_vals.append(psnr(img_norm[:, :, i], recon_norm[:, :, i], data_range=1.0))
                 psnr_val = np.mean(psnr_vals)
 
-                # Ukuran dan penghematan (perkiraan)
                 ukuran_asli = h * w * 3
-                ukuran_baru = (h * k + k * w) * 3  # koefisien + komponen untuk 3 channel
+                ukuran_baru = (h * k + k * w) * 3
                 rasio = ukuran_baru / ukuran_asli
                 penghematan = (1 - rasio) * 100
 
-                # Tampilkan gambar
                 col1, col2 = st.columns(2)
                 with col1:
-                    st.markdown('<div class="image-card">', unsafe_allow_html=True)
-                    st.markdown("### 🖼️ Gambar Asli (RGB)")
+                    st.markdown('<div class="result-container">', unsafe_allow_html=True)
+                    st.markdown('<div class="pink-badge">🖼️ Gambar Asli (RGB)</div>', unsafe_allow_html=True)
                     st.image(image, use_container_width=True)
-                    st.markdown(f"*Ukuran: {w} x {h} px*")
+                    st.caption(f"Ukuran: {w} x {h} px")
                     st.markdown('</div>', unsafe_allow_html=True)
 
                 with col2:
-                    st.markdown('<div class="image-card">', unsafe_allow_html=True)
-                    st.markdown(f"### 🗜️ Hasil Kompresi (k={k})")
+                    st.markdown('<div class="result-container">', unsafe_allow_html=True)
+                    st.markdown(f'<div class="pink-badge">🗜️ Hasil Kompresi (k={k})</div>', unsafe_allow_html=True)
                     st.image(img_reconstructed, use_container_width=True)
-                    st.markdown(f"*Ukuran: {w} x {h} px*")
+                    st.caption(f"Ukuran: {w} x {h} px")
                     st.markdown('</div>', unsafe_allow_html=True)
 
-                # Tombol download
                 buf = io.BytesIO()
                 img_reconstructed.save(buf, format="PNG")
                 byte_im = buf.getvalue()
@@ -961,7 +942,6 @@ elif page == "🗜️ Kompresi":
                 href += '<button class="download-btn">⬇️ Download Hasil Kompresi</button></a>'
                 st.markdown(href, unsafe_allow_html=True)
 
-                # --- Metrik Kualitas ---
                 st.markdown("---")
                 st.markdown("### 📊 Metrik Kualitas")
                 col_m1, col_m2, col_m3, col_m4 = st.columns(4)
@@ -970,7 +950,6 @@ elif page == "🗜️ Kompresi":
                 col_m3.metric("Penghematan", f"{penghematan:.1f}%")
                 col_m4.metric("Rasio Kompresi", f"{rasio:.4f}")
 
-                # Detail kompresi
                 st.markdown("### 📋 Detail Kompresi")
                 st.markdown(f"""
                 <div class="detail-comp">
@@ -983,7 +962,6 @@ elif page == "🗜️ Kompresi":
                 </div>
                 """, unsafe_allow_html=True)
 
-                # --- Kesimpulan Kualitas Kompresi ---
                 st.markdown("### 📝 Kesimpulan Kualitas Kompresi")
                 if ssim_val > 0.95 and penghematan > 30:
                     kesimpulan = "✅ **Kompresi sangat baik!** Gambar terkompresi memiliki kualitas hampir sama dengan asli (SSIM > 0.95) dengan penghematan ukuran yang signifikan (>30%)."
@@ -995,21 +973,18 @@ elif page == "🗜️ Kompresi":
                     kesimpulan = "❌ **Kompresi kurang baik.** Kualitas visual menurun signifikan (SSIM ≤ 0.70). Sebaiknya naikkan jumlah komponen (k) untuk hasil lebih baik."
                 st.markdown(f'<div class="info-box">{kesimpulan}</div>', unsafe_allow_html=True)
 
-                # Tambahan keterangan interpretasi metrik
                 st.markdown("""
                 <div style="background: #FCE4EC; padding: 1rem; border-radius: 12px; margin-top: 1rem; border: 1px solid #EC407A;">
                     <p style="margin:0;"><b>💡 Interpretasi Metrik:</b><br>
-                    • <b>SSIM</b> (Structural Similarity) – mendekati 1 berarti sangat mirip dengan asli.<br>
-                    • <b>PSNR</b> (Peak Signal-to-Noise Ratio) – > 40 dB biasanya kualitas sangat baik.<br>
-                    • <b>Penghematan</b> – persentase pengurangan ukuran (positif = lebih kecil).<br>
-                    • <b>Rasio kompresi</b> – nilai < 1 berarti ukuran berkurang.
+                    • <b>SSIM</b> – mendekati 1 berarti sangat mirip dengan asli.<br>
+                    • <b>PSNR</b> – > 40 dB biasanya kualitas sangat baik.<br>
+                    • <b>Penghematan</b> – persentase pengurangan ukuran.<br>
+                    • <b>Rasio kompresi</b> – < 1 berarti ukuran berkurang.
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
 
-                # --- Kurva Akumulasi Informasi PCA (channel R) ---
                 st.markdown("### 📈 Kurva Akumulasi Informasi PCA (Channel R)")
-                # Fit PCA full pada channel R untuk kurva
                 pca_full = PCA()
                 pca_full.fit(img_array[:, :, 0])
                 cumsum_var = np.cumsum(pca_full.explained_variance_ratio_)
