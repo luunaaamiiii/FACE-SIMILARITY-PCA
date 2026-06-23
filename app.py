@@ -1,10 +1,3 @@
-# =====================================================
-# APLIKASI ANGEL - PCA FACE SIMILARITY & KOMPRESI
-# =====================================================
-# Dibuat oleh: Kelompok 2 (ANGEL)
-# Mata Kuliah: Aljabar Linier / Computer Vision
-# =====================================================
-
 import streamlit as st
 from PIL import Image, ImageDraw
 import io
