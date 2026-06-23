@@ -1156,17 +1156,23 @@ elif page == "🔍 Deteksi":
 
         if st.button("🔎 Hitung Kemiripan", use_container_width=True):
             try:
-                # ----- VALIDASI WAJAH (deteksi apakah benar-benar wajah manusia) -----
+        # ----- VALIDASI WAJAH (Cek Kedua Foto Sekaligus) -----
                 img1_bytes = img1.getvalue()
                 img2_bytes = img2.getvalue()
 
-                if not is_face_image(img1_bytes):
-                    st.error("❌ **Foto Pertama BUKAN WAJAH MANUSIA!** Upload foto wajah yang jelas dan tidak menggunakan filter.")
-                    st.stop()
-                if not is_face_image(img2_bytes):
-                    st.error("❌ **Foto Kedua BUKAN WAJAH MANUSIA!** Upload foto wajah yang jelas dan tidak menggunakan filter.")
-                    st.stop()
+                face1 = is_face_image(img1_bytes)
+                face2 = is_face_image(img2_bytes)
 
+                error_messages = []
+                if not face1:
+                    error_messages.append("❌ **Foto Pertama BUKAN WAJAH MANUSIA!** Upload foto wajah yang jelas dan tidak menggunakan filter.")
+                if not face2:
+                    error_messages.append("❌ **Foto Kedua BUKAN WAJAH MANUSIA!** Upload foto wajah yang jelas dan tidak menggunakan filter.")
+
+                if error_messages:
+                    for msg in error_messages:
+                        st.error(msg)
+                    st.stop()
                 # ----- PREPROCESSING -----
                 size = (100, 100)
                 im1 = Image.open(img1).convert("L").resize(size)
